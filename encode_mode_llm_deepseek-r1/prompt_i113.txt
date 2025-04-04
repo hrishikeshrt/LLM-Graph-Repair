@@ -1,0 +1,48 @@
+Based on the following description of an inconsistency
+suggest graph repairs to fix it:
+---
+
+        MATCH (p:Patient)-[rm:TAKES_MEDICATION]->(m:Medication)-[rc:HAS_INGREDIENT]->(i:Ingredient),
+            (p)-[ra:ALLERGIC_TO]->(i)
+        RETURN *
+        
+This graph represents a patient's medication details along with their allergies and medical history. 
+
+- **Node 4:e00e4730-b338-4d2b-b715-75b0e15ece93:6757** is labeled as an **Ingredient**, indicating it contains the word "Ingredient" in its description.
+
+- **Node 4:e00e4730-b338-4d2b-b715-75b0e15ece93:6846** is labeled as a **Medication**, with detailed properties including the medication name, code (205923), and description ("1 ML Epogen 4000 UNT/ML Injection").
+
+- **Node 4:e00e4730-b338-4d2b-b715-75b0e15ece93:5840** is labeled as a **Patient**, with properties such as address ("935 Rempel Trail"), birthdate ("1923-06-22"), and patient ID ("3f336702-bf73-4fc8-bd59-3ba77fd65d0d").
+
+The relationships between these nodes are as follows:
+
+- **Edge 4:e00e4730-b338-4d2b-b715-75b0e15ece93:6846 -> 4:e00e4730-b338-4d2b-b715-75b0e15ece93:6757** indicates that **this medication has an ingredient**, with a possible error noted in the properties.
+
+- **Edge 4:e00e4730-b338-4d2b-b715-75b0e15ece93:5840 -> 4:e00e4730-b338-4d2b-b715-75b0e15ece93:6757** indicates that **this patient is allergic to this ingredient**.
+
+- **Edge 4:e00e4730-b338-4d2b-b715-75b0e15ece93:5840 -> 4:e00e4730-b338-4d2b-b715-75b0e15ece93:6846** indicates that **this patient takes this medication**, with the start date ("2023-01-01") and stop date ("2024-12-31") provided.
+---
+
+OUTPUT FORMAT:
+
+Provide suggested repairs in the following structured format:
+
+<repairs> {op_code} | {target} | {details} </repairs>
+
+where:
+- {op_code} is one of (`ADD_NODE`, `ADD_EDGE`, `DEL_EDGE`, `UPD_NODE`, `UPD_EDGE`)
+- {target} specifies the affected node or relationship variable
+- {details} contains relevant property changes (key-value) or `-` if none
+
+Do NOT add explanations beyond the descriptions in the output.
+
+
+EXAMPLE OUTPUT #1: (e.g., if the allergy information is incorrect)
+<repairs>
+DEL_EDGE | [ra] | -
+</repairs>
+
+EXAMPLE OUTPUT #2: (e.g., if the ingredient information is incorrect)
+<repairs>
+DEL_EDGE | [rc] | -
+</repairs>

@@ -1,0 +1,43 @@
+Based on the following description of an inconsistency
+suggest graph repairs to fix it:
+---
+
+        MATCH (p:Patient)-[rm:TAKES_MEDICATION]->(m:Medication)-[rc:HAS_INGREDIENT]->(i:Ingredient),
+            (p)-[ra:ALLERGIC_TO]->(i)
+        RETURN *
+        The graph describes a scenario involving an ingredient, a medication, and a patient. The ingredient is oxycodone (Node ID: 6757), which has a property indicating its tau_o value as 1. There is also a medication described as "1 ML Epogen 4000 UNT/ML Injection" (Node ID: 6846) with properties including a code '205923', a description, and a tau_o value of 1.
+
+The patient, identified by the first name Sanford861 and last name Fritsch593, was born on June 22, 1923. The patient's address is 935 Rempel Trail (Node ID: 5840), with a tau_k property that is an empty list, indicating no known allergies, and a tau_o value of 0.
+
+The relationships between these nodes are as follows:
+
+1. The medication "1 ML Epogen 4000 UNT/ML Injection" has oxycodone as one of its ingredients (Edge ID: 52036). This relationship is marked with a type 'HAS_INGREDIENT' and includes properties such as tau_o value of 1, and an error indicator set to '1'.
+
+2. The patient, Sanford861 Fritsch593, is allergic to oxycodone (Edge ID: 985), indicated by the relationship type 'ALLERGIC_TO'. This edge has no start or stop dates for the allergy, a tau_o value of 0, and an error indicator set to '0'.
+
+3. The patient takes the medication "1 ML Epogen 4000 UNT/ML Injection" (Edge ID: 840), with both the start and stop times recorded as March 3, 2018, at 09:55:43 UTC. This relationship is of type 'TAKES_MEDICATION', has a tau_o value of 0, and no error indicator specified.
+---
+
+OUTPUT FORMAT:
+
+Provide suggested repairs in the following structured format:
+
+<repairs> {op_code} | {target} | {details} </repairs>
+
+where:
+- {op_code} is one of (`ADD_NODE`, `ADD_EDGE`, `DEL_EDGE`, `UPD_NODE`, `UPD_EDGE`)
+- {target} specifies the affected node or relationship variable
+- {details} contains relevant property changes (key-value) or `-` if none
+
+Do NOT add explanations beyond the descriptions in the output.
+
+
+EXAMPLE OUTPUT #1: (e.g., if the allergy information is incorrect)
+<repairs>
+DEL_EDGE | [rm] | -
+</repairs>
+
+EXAMPLE OUTPUT #2: (e.g., if the ingredient information is incorrect)
+<repairs>
+DEL_EDGE | [rc] | -
+</repairs>

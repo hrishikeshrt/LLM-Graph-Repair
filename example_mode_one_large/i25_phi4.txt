@@ -1,0 +1,24 @@
+To address the inconsistency where a patient is taking medication that contains an ingredient they are allergic to, we need to ensure that either the patient stops taking this medication or that the medication does not contain the allergenic ingredient. Here are two possible repair strategies:
+
+### Strategy 1: Remove the Medication from the Patient's Treatment
+
+<repairs>
+DEL_EDGE | (rm) | -
+</repairs>
+
+This operation removes the relationship indicating that the patient takes the problematic medication.
+
+### Strategy 2: Change the Medication Composition
+
+If it is feasible to change the composition of the medication:
+
+1. Add a new version of the medication without the allergenic ingredient.
+2. Update the patient's treatment to use this new medication.
+
+<repairs>
+ADD_NODE | (m_new:Medication) | description="1 ML Epogen 4000 UNT/ML Injection, no oxycodone"
+ADD_EDGE | (p)-[:TAKES_MEDICATION]->(m_new) | -
+DEL_EDGE | (rm) | -
+</repairs>
+
+These operations ensure that the patient is not treated with a medication containing an allergenic ingredient. Choose the strategy based on what is feasible in your context.

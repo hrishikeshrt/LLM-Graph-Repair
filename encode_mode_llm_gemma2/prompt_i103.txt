@@ -1,0 +1,36 @@
+Based on the following description of an inconsistency
+suggest graph repairs to fix it:
+---
+
+        MATCH (p:Patient)-[rm:TAKES_MEDICATION]->(m:Medication)-[rc:HAS_INGREDIENT]->(i:Ingredient),
+            (p)-[ra:ALLERGIC_TO]->(i)
+        RETURN *
+        [Node 4:e00e4730-b338-4d2b-b715-75b0e15ece93:6695] (hydrochlorothiazide) is an ingredient of [Node 4:e00e4730-b338-4d2b-b715-75b0e15ece93:6694] (HCTZ 25 MG Oral Tablet). [Node 4:e00e4730-b338-4d2b-b715-75b0e15ece93:5641] (09616ead-22c8-4210-8cb9-2fdc28e043ca) is allergic to [Node 4:e00e4730-b338-4d2b-b715-75b0e15ece93:6695] (hydrochlorothiazide).  [Node 4:e00e4730-b338-4d2b-b715-75b0e15ece93:5641] (09616ead-22c8-4210-8cb9-2fdc28e043ca) takes [Node 4:e00e4730-b338-4d2b-b715-75b0e15ece93:6694] (HCTZ 25 MG Oral Tablet) from 1983-12-05T05:08:34Z to 1984-12-10T05:08:34Z.  
+
+
+
+---
+
+OUTPUT FORMAT:
+
+Provide suggested repairs in the following structured format:
+
+<repairs> {op_code} | {target} | {details} </repairs>
+
+where:
+- {op_code} is one of (`ADD_NODE`, `ADD_EDGE`, `DEL_EDGE`, `UPD_NODE`, `UPD_EDGE`)
+- {target} specifies the affected node or relationship variable
+- {details} contains relevant property changes (key-value) or `-` if none
+
+Do NOT add explanations beyond the descriptions in the output.
+
+
+EXAMPLE OUTPUT #1: (e.g., if the allergy information is incorrect)
+<repairs>
+DEL_EDGE | [ra] | -
+</repairs>
+
+EXAMPLE OUTPUT #2: (e.g., if the ingredient information is incorrect)
+<repairs>
+DEL_EDGE | [rc] | -
+</repairs>

@@ -1,0 +1,39 @@
+Based on the following description of an inconsistency
+suggest graph repairs to fix it:
+---
+
+        MATCH (p:Patient)-[rm:TAKES_MEDICATION]->(m:Medication)-[rc:HAS_INGREDIENT]->(i:Ingredient),
+            (p)-[ra:ALLERGIC_TO]->(i)
+        RETURN *
+        The graph describes a network involving an ingredient, a medication, and a patient. The ingredient, identified as mestranol (Node ID: 6776), is part of the Humulin 70/30 Injectable Suspension (Node ID: 6786). This medication has a code '106892' and is described as "Humulin 70/30 Injectable Suspension." There is an edge indicating that this medication contains the ingredient mestranol, marked with a type 'HAS_INGREDIENT,' which also notes an error status.
+
+The patient in question, Logan Brekke (Node ID: 6203), has an address at 1081 Orn Street and was born on May 30, 1913. The patient passed away on May 2, 2009. There are two key relationships involving the patient:
+
+1. An edge labeled 'ALLERGIC_TO' connects Logan Brekke to mestranol, indicating an allergy to this ingredient without any error noted.
+   
+2. Another edge labeled 'TAKES_MEDICATION' links Logan Brekke to Humulin 70/30 Injectable Suspension, showing that he took this medication from November 11, 1983, until December 16, 1983. This connection also indicates no errors in the record.
+---
+
+OUTPUT FORMAT:
+
+Provide suggested repairs in the following structured format:
+
+<repairs> {op_code} | {target} | {details} </repairs>
+
+where:
+- {op_code} is one of (`ADD_NODE`, `ADD_EDGE`, `DEL_EDGE`, `UPD_NODE`, `UPD_EDGE`)
+- {target} specifies the affected node or relationship variable
+- {details} contains relevant property changes (key-value) or `-` if none
+
+Do NOT add explanations beyond the descriptions in the output.
+
+
+EXAMPLE OUTPUT #1: (e.g., if the allergy information is incorrect)
+<repairs>
+DEL_EDGE | [rm] | -
+</repairs>
+
+EXAMPLE OUTPUT #2: (e.g., if the ingredient information is incorrect)
+<repairs>
+DEL_EDGE | [rc] | -
+</repairs>

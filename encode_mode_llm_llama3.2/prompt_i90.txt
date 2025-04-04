@@ -1,0 +1,39 @@
+Based on the following description of an inconsistency
+suggest graph repairs to fix it:
+---
+
+        MATCH (p:Patient)-[rm:TAKES_MEDICATION]->(m:Medication)-[rc:HAS_INGREDIENT]->(i:Ingredient),
+            (p)-[ra:ALLERGIC_TO]->(i)
+        RETURN *
+        Node [4:e00e4730-b338-4d2b-b715-75b0e15ece93] is labeled as an "Ingredient" and has the ID "mestranol". It also appears to be a medication, identified by code "106892", with the description "Humulin 70/30 Injectable Suspension".
+
+Node [4:e00e4730-b338-4d2b-b715-75b0e15ece93] is also labeled as a "Patient" and has the ID "cae10920-f977-48b4-a0d3-4d70ad561fd1". The patient's address is located at 1081 Orn Street, born on May 30th, 1913, and died on May 2nd, 2009.
+
+There is an edge from [4:e00e4730-b338-4d2b-b715-75b0e15ece93:6786] to [4:e00e4730-b338-4d2b-b715-75b0e15ece93:6776], indicating that the medication "Humulin 70/30 Injectable Suspension" is an ingredient in a certain quantity.
+
+There are two edges from [4:e00e4730-b338-4d2b-b715-75b0e15ece93:6203] to [4:e00e4730-b338-4d2b-b715-75b0e15ece93:6776], one indicating that the patient is allergic to a certain ingredient, and another indicating that the patient takes this medication.
+---
+
+OUTPUT FORMAT:
+
+Provide suggested repairs in the following structured format:
+
+<repairs> {op_code} | {target} | {details} </repairs>
+
+where:
+- {op_code} is one of (`ADD_NODE`, `ADD_EDGE`, `DEL_EDGE`, `UPD_NODE`, `UPD_EDGE`)
+- {target} specifies the affected node or relationship variable
+- {details} contains relevant property changes (key-value) or `-` if none
+
+Do NOT add explanations beyond the descriptions in the output.
+
+
+EXAMPLE OUTPUT #1: (e.g., if the allergy information is incorrect)
+<repairs>
+DEL_EDGE | [rm] | -
+</repairs>
+
+EXAMPLE OUTPUT #2: (e.g., if the ingredient information is incorrect)
+<repairs>
+DEL_EDGE | [rc] | -
+</repairs>

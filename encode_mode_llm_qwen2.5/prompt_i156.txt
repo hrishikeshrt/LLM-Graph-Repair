@@ -1,0 +1,33 @@
+Based on the following description of an inconsistency
+suggest graph repairs to fix it:
+---
+
+        MATCH (p:Patient)-[rm:TAKES_MEDICATION]->(m:Medication)-[rc:HAS_INGREDIENT]->(i:Ingredient),
+            (p)-[ra:ALLERGIC_TO]->(i)
+        RETURN *
+        There is a patient with the ID cecb7ece-fb70-4a7f-b51d-6e8dd1506ad9, whose first name is Isiah and last name is Fritsch593. This patient was born on January 6, 1951, and lives at 690 Stark Vista. The patient takes a medication with the code 860975, which is called "24 HR Glucophage 500 MG Extended Release Oral Tablet". Additionally, this patient has an allergy to ferrous sulfate. The patient started taking the medication on August 16, 2003, and stopped on August 30, 2003. Ferrous sulfate is also listed as an ingredient in one of the medications the patient takes.
+---
+
+OUTPUT FORMAT:
+
+Provide suggested repairs in the following structured format:
+
+<repairs> {op_code} | {target} | {details} </repairs>
+
+where:
+- {op_code} is one of (`ADD_NODE`, `ADD_EDGE`, `DEL_EDGE`, `UPD_NODE`, `UPD_EDGE`)
+- {target} specifies the affected node or relationship variable
+- {details} contains relevant property changes (key-value) or `-` if none
+
+Do NOT add explanations beyond the descriptions in the output.
+
+
+EXAMPLE OUTPUT #1: (e.g., if the allergy information is incorrect)
+<repairs>
+DEL_EDGE | [ra] | -
+</repairs>
+
+EXAMPLE OUTPUT #2: (e.g., if the ingredient information is incorrect)
+<repairs>
+DEL_EDGE | [rc] | -
+</repairs>

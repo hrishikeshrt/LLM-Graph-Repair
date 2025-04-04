@@ -1,0 +1,18 @@
+ <repairs>
+    DEL_EDGE | (ra) | WHERE (ra.patient)=(p) AND (ra.ingredient)=(i)
+    </repairs>
+   <repairs>
+    UPD_NODE | (m) | description="1 ML Epogen 4000 UNT/ML Injection", contains_ingredient=collect([{id: "epoetin alfa"}])
+    DEL_EDGE | (rm) | WHERE (rm.patient)=(p) AND (rm.medication)=(m)
+    </repairs>
+   <repairs>
+    ADD_NODE | (i1:Ingredient) | id="epoetin alfa"
+    ADD_EDGE | (m)-[:CONTAINS_INGREDIENT]->(i1) | -
+    </repairs>
+   <repairs>
+    UPD_EDGE | (rc) | WHERE (rc.medication)=(m) AND (rc.ingredient)=(i1)
+    </repairs>
+   <repairs>
+    ADD_NODE | (p1:Patient) | first="Walker122"
+    UPD_EDGE | (p1)-[:ALLERGIC_TO]->(i1) | -
+    </repairs>

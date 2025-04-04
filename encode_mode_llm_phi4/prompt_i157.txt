@@ -1,0 +1,37 @@
+Based on the following description of an inconsistency
+suggest graph repairs to fix it:
+---
+
+        MATCH (p:Patient)-[rm:TAKES_MEDICATION]->(m:Medication)-[rc:HAS_INGREDIENT]->(i:Ingredient),
+            (p)-[ra:ALLERGIC_TO]->(i)
+        RETURN *
+        The graph describes a network involving an ingredient, a medication, and a patient. Ferrous sulfate (Node ID: 6691) is identified as an ingredient with a property indicating its occurrence (`tau_o`) of 1. A medication known as "24 HR Glucophage 500 MG Extended Release Oral Tablet" (Node ID: 6750), has a code '860975' and also shares the same occurrence value (`tau_o` = 1). There is an edge between this medication and ferrous sulfate, indicating that the medication contains ferrous sulfate as an ingredient. However, there's an error noted in this relationship with `is_error` set to '1'.
+
+The patient, Isiah14 Fritsch593 (Node ID: 5589), resides at 690 Stark Vista and was born on January 6, 1951. This patient is connected to ferrous sulfate via an edge labeled as ALLERGIC_TO, with no error (`is_error` = '0') but no specified start or stop date for the allergy.
+
+Additionally, there's a relationship between Isiah14 Fritsch593 and the medication "24 HR Glucophage 500 MG Extended Release Oral Tablet" through an edge labeled TAKES_MEDICATION. This indicates that the patient started taking this medication on October 19, 1991, at 06:11:10 UTC and stopped on November 23, 1991, at 06:11:10 UTC, with no error in this record (`is_error` = '0').
+---
+
+OUTPUT FORMAT:
+
+Provide suggested repairs in the following structured format:
+
+<repairs> {op_code} | {target} | {details} </repairs>
+
+where:
+- {op_code} is one of (`ADD_NODE`, `ADD_EDGE`, `DEL_EDGE`, `UPD_NODE`, `UPD_EDGE`)
+- {target} specifies the affected node or relationship variable
+- {details} contains relevant property changes (key-value) or `-` if none
+
+Do NOT add explanations beyond the descriptions in the output.
+
+
+EXAMPLE OUTPUT #1: (e.g., if the allergy information is incorrect)
+<repairs>
+DEL_EDGE | [rm] | -
+</repairs>
+
+EXAMPLE OUTPUT #2: (e.g., if the ingredient information is incorrect)
+<repairs>
+DEL_EDGE | [rc] | -
+</repairs>

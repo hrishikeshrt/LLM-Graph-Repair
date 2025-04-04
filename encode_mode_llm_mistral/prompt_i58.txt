@@ -1,0 +1,41 @@
+Based on the following description of an inconsistency
+suggest graph repairs to fix it:
+---
+
+        MATCH (p:Patient)-[rm:TAKES_MEDICATION]->(m:Medication)-[rc:HAS_INGREDIENT]->(i:Ingredient),
+            (p)-[ra:ALLERGIC_TO]->(i)
+        RETURN *
+         Node with ID '3f336702-bf73-4fc8-bd59-3ba77fd65d0d' is labeled as a Patient. Its properties include the first name 'Sanford861', last name 'Fritsch593', birthdate '1923-06-22', address '935 Rempel Trail', and no death date.
+
+   Node with ID 'e00e4730-b338-4d2b-b715-75b0e15ece93' has two labels: Ingredient and Medication. The Ingredient property is 'ferrous sulfate' with a tau_o of 1, while the Medication properties include code '860975', description '24 HR Glucophage 500 MG Extended Release Oral Tablet', and tau_o of 1.
+
+   There is an Edge connecting the Patient node to the Ingredient node, with type HAS_INGREDIENT, key 5:e00e4730-b338-4d2b-b715-75b0e15ece93:51961, and properties indicating that the patient has the ingredient with a tau_o of 1.
+
+   Another Edge connects the Patient node to the Medication node, with type TAKES_MEDICATION, key 5:e00e4730-b338-4d2b-b715-75b0e15ece93:911, and properties indicating that the patient started taking the medication on '2011-04-22T09:55:43Z' and stopped on '2011-05-13T09:55:43Z'.
+
+   There is also an Edge connecting the Patient node to another node, but its type and properties are not specified in this graph.
+---
+
+OUTPUT FORMAT:
+
+Provide suggested repairs in the following structured format:
+
+<repairs> {op_code} | {target} | {details} </repairs>
+
+where:
+- {op_code} is one of (`ADD_NODE`, `ADD_EDGE`, `DEL_EDGE`, `UPD_NODE`, `UPD_EDGE`)
+- {target} specifies the affected node or relationship variable
+- {details} contains relevant property changes (key-value) or `-` if none
+
+Do NOT add explanations beyond the descriptions in the output.
+
+
+EXAMPLE OUTPUT #1: (e.g., if the allergy information is incorrect)
+<repairs>
+DEL_EDGE | [rm] | -
+</repairs>
+
+EXAMPLE OUTPUT #2: (e.g., if the ingredient information is incorrect)
+<repairs>
+DEL_EDGE | [rc] | -
+</repairs>

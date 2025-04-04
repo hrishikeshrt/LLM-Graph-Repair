@@ -1,0 +1,39 @@
+Based on the following description of an inconsistency
+suggest graph repairs to fix it:
+---
+
+        MATCH (p:Patient)-[rm:TAKES_MEDICATION]->(m:Medication)-[rc:HAS_INGREDIENT]->(i:Ingredient),
+            (p)-[ra:ALLERGIC_TO]->(i)
+        RETURN *
+        The graph describes a scenario involving an ingredient, a medication, and a patient. The ingredient is identified as "mestranol" (Node ID: 4:e00e4730-b338-4d2b-b715-75b0e15ece93:6776) with a property `tau_o` of 1. This ingredient is part of the medication "Humulin 70/30 Injectable Suspension" (Node ID: 4:e00e4730-b338-4d2b-b715-75b0e15ece93:6786), which has a code '106892' and also a `tau_o` property of 1. The patient, identified as Valrie435 Mertz280 (Node ID: 4:e00e4730-b338-4d2b-b715-75b0e15ece93:6012), resides at 939 Gutmann Alley, was born on May 26, 1981, and has a `tau_o` property of 0.
+
+There is an edge indicating that the medication "Humulin 70/30 Injectable Suspension" contains the ingredient mestranol (Edge ID: 5:e00e4730-b338-4d2b-b715-75b0e15ece93:51991), with a `tau_o` of 1 and marked as an error (`is_error`: '1').
+
+The patient Valrie435 Mertz280 is allergic to mestranol (Edge ID: 5:e00e4730-b338-4d2b-b715-75b0e15ece93:991), with no specified start or stop date, a `tau_o` of 0, and not marked as an error (`is_error`: '0').
+
+Additionally, the patient has been taking "Humulin 70/30 Injectable Suspension" from September 17, 2019, to November 12, 2019 (Edge ID: 5:e00e4730-b338-4d2b-b715-75b0e15ece93:801), with a `tau_o` of 0 and not marked as an error (`is_error`: '0').
+---
+
+OUTPUT FORMAT:
+
+Provide suggested repairs in the following structured format:
+
+<repairs> {op_code} | {target} | {details} </repairs>
+
+where:
+- {op_code} is one of (`ADD_NODE`, `ADD_EDGE`, `DEL_EDGE`, `UPD_NODE`, `UPD_EDGE`)
+- {target} specifies the affected node or relationship variable
+- {details} contains relevant property changes (key-value) or `-` if none
+
+Do NOT add explanations beyond the descriptions in the output.
+
+
+EXAMPLE OUTPUT #1: (e.g., if the allergy information is incorrect)
+<repairs>
+DEL_EDGE | [rm] | -
+</repairs>
+
+EXAMPLE OUTPUT #2: (e.g., if the ingredient information is incorrect)
+<repairs>
+DEL_EDGE | [rc] | -
+</repairs>

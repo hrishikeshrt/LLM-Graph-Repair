@@ -1,0 +1,38 @@
+Based on the following description of an inconsistency
+suggest graph repairs to fix it:
+---
+
+        MATCH (p:Patient)-[rm:TAKES_MEDICATION]->(m:Medication)-[rc:HAS_INGREDIENT]->(i:Ingredient),
+            (p)-[ra:ALLERGIC_TO]->(i)
+        RETURN *
+        
+The graph describes a patient named Samatha845 who is taking Coumadin 5 MG Oral Tablet as their medication. The patient's birthdate is February 14, 1941, and they reside at 531 Collier Wynd. Warfarin is listed as an ingredient in the medication, indicating a potential allergic reaction to it.
+
+The patient takes Coumadin starting from December 6, 2019, and stopped taking it on January 10, 2020. There's also an allergic reaction noted due to Warfarin being present in the medication.
+
+This information provides a clear overview of the patient's medical details and medication history.
+---
+
+OUTPUT FORMAT:
+
+Provide suggested repairs in the following structured format:
+
+<repairs> {op_code} | {target} | {details} </repairs>
+
+where:
+- {op_code} is one of (`ADD_NODE`, `ADD_EDGE`, `DEL_EDGE`, `UPD_NODE`, `UPD_EDGE`)
+- {target} specifies the affected node or relationship variable
+- {details} contains relevant property changes (key-value) or `-` if none
+
+Do NOT add explanations beyond the descriptions in the output.
+
+
+EXAMPLE OUTPUT #1: (e.g., if the allergy information is incorrect)
+<repairs>
+DEL_EDGE | [ra] | -
+</repairs>
+
+EXAMPLE OUTPUT #2: (e.g., if the ingredient information is incorrect)
+<repairs>
+DEL_EDGE | [rc] | -
+</repairs>

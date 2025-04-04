@@ -1,0 +1,43 @@
+Based on the following description of an inconsistency
+suggest graph repairs to fix it:
+---
+
+        MATCH (p:Patient)-[rm:TAKES_MEDICATION]->(m:Medication)-[rc:HAS_INGREDIENT]->(i:Ingredient),
+            (p)-[ra:ALLERGIC_TO]->(i)
+        RETURN *
+        1. There is a node labeled as 'Ingredient' with the ID 'mestranol'. It has a property 'tau_o' with the value 1.
+
+   2. There is another node labeled as 'Medication', specifically 'Humulin 70/30 Injectable Suspension', with the code '106892'. This node also has a 'tau_o' property with the value 1 and a 'description' property.
+
+   3. There is a third node labeled as 'Patient' with the ID 'b656a85d-637d-458a-abd8-17219816280f'. This node has properties such as 'address', 'birthdate', 'last', 'first', 'tau_k', 'deathdate', and 'id'.
+
+   4. The 'Ingredient' node is connected to the 'Medication' node through an edge with the key 5:e00e4730-b338-4d2b-b715-75b0e15ece93:51991, type_ 'HAS_INGREDIENT', and properties including 'tau_o' with the value 1 and 'is_error' as '1'.
+
+   5. The 'Patient' node is connected to the 'Ingredient' node through an edge with the key 5:e00e4730-b338-4d2b-b715-75b0e15ece93:994, type_ 'ALLERGIC_TO', and properties such as 'tau_o' with the value 0 and 'is_error' as '0'.
+
+   6. The 'Patient' node is also connected to the 'Medication' node through an edge with the key 5:e00e4730-b338-4d2b-b715-75b0e15ece93:892, type_ 'TAKES_MEDICATION'. This edge has properties including 'stop' as '2016-12-18T17:28:26Z', 'start' as '2016-11-27T17:28:26Z', 'tau_o' with the value 0.
+---
+
+OUTPUT FORMAT:
+
+Provide suggested repairs in the following structured format:
+
+<repairs> {op_code} | {target} | {details} </repairs>
+
+where:
+- {op_code} is one of (`ADD_NODE`, `ADD_EDGE`, `DEL_EDGE`, `UPD_NODE`, `UPD_EDGE`)
+- {target} specifies the affected node or relationship variable
+- {details} contains relevant property changes (key-value) or `-` if none
+
+Do NOT add explanations beyond the descriptions in the output.
+
+
+EXAMPLE OUTPUT #1: (e.g., if the allergy information is incorrect)
+<repairs>
+DEL_EDGE | [rm] | -
+</repairs>
+
+EXAMPLE OUTPUT #2: (e.g., if the ingredient information is incorrect)
+<repairs>
+DEL_EDGE | [rc] | -
+</repairs>

@@ -1,0 +1,34 @@
+Based on the following description of an inconsistency
+suggest graph repairs to fix it:
+---
+Node 4:e00e4730-b338-4d2b-b715-75b0e15ece93:6700: labels: frozenset({'Ingredient'}), properties: {'tau_o': 1, 'id': 'verapamil'}
+Node 4:e00e4730-b338-4d2b-b715-75b0e15ece93:6699: labels: frozenset({'Medication'}), properties: {'code': '897718', 'tau_o': 1, 'description': 'verapamil hydrochloride 40 MG Oral Tablet'}
+Node 4:e00e4730-b338-4d2b-b715-75b0e15ece93:6588: labels: frozenset({'Patient'}), properties: {'address': '856 Carroll Center Apt 22', 'birthdate': '1914-09-05', 'tau_k': [], 'last': 'Bayer639', 'tau_o': 0, 'deathdate': '2000-09-05', 'id': 'b5581477-7033-4586-bc95-da6a508bdab6', 'first': 'Rosio404'}
+Edge 4:e00e4730-b338-4d2b-b715-75b0e15ece93:6699 -> 4:e00e4730-b338-4d2b-b715-75b0e15ece93:6700: key: 5:e00e4730-b338-4d2b-b715-75b0e15ece93:51919, type_: HAS_INGREDIENT, properties: {'tau_o': 1, 'is_error': '0'}
+Edge 4:e00e4730-b338-4d2b-b715-75b0e15ece93:6588 -> 4:e00e4730-b338-4d2b-b715-75b0e15ece93:6700: key: 5:e00e4730-b338-4d2b-b715-75b0e15ece93:975, type_: ALLERGIC_TO, properties: {'stop': '', 'start': '', 'tau_o': 0, 'is_error': '1'}
+Edge 4:e00e4730-b338-4d2b-b715-75b0e15ece93:6588 -> 4:e00e4730-b338-4d2b-b715-75b0e15ece93:6699: key: 5:e00e4730-b338-4d2b-b715-75b0e15ece93:782, type_: TAKES_MEDICATION, properties: {'stop': '1986-08-30T17:27:52Z', 'tau_o': 0, 'start': '1985-08-24T17:27:52Z'}
+---
+
+OUTPUT FORMAT:
+
+Provide suggested repairs in the following structured format:
+
+<repairs> {op_code} | {target} | {details} </repairs>
+
+where:
+- {op_code} is one of (`ADD_NODE`, `ADD_EDGE`, `DEL_EDGE`, `UPD_NODE`, `UPD_EDGE`)
+- {target} specifies the affected node or relationship variable
+- {details} contains relevant property changes (key-value) or `-` if none
+
+Do NOT add explanations beyond the descriptions in the output.
+
+
+EXAMPLE OUTPUT #1: (e.g., if the allergy information is incorrect)
+<repairs>
+DEL_EDGE | [rm] | -
+</repairs>
+
+EXAMPLE OUTPUT #2: (e.g., if the ingredient information is incorrect)
+<repairs>
+DEL_EDGE | [rc] | -
+</repairs>

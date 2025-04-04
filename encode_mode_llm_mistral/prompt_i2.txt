@@ -1,0 +1,41 @@
+Based on the following description of an inconsistency
+suggest graph repairs to fix it:
+---
+
+        MATCH (p:Patient)-[rm:TAKES_MEDICATION]->(m:Medication)-[rc:HAS_INGREDIENT]->(i:Ingredient),
+            (p)-[ra:ALLERGIC_TO]->(i)
+        RETURN *
+        1. There is a node labeled as 'Ingredient' with the ID 'exemestane' and property values 'tau_o': 1. This ingredient is also associated with the medication code '310798'.
+
+   2. Another node labeled as 'Medication' exists, identified by the ID 'HCTZ 25 MG Oral Tablet', which has properties such as 'code': '310798', 'description': 'HCTZ 25 MG Oral Tablet', and 'tau_o': 1.
+
+   3. A third node is present, labeled as 'Patient' with the ID '3acf9313-1874-4dff-ab2a-3187516d92d6'. This patient's properties include 'first': 'Earle679', 'last': 'Frami345', 'birthdate': '1917-05-07', 'deathdate': '2018-01-23', and 'address': '208 Kilback Center Unit 20'.
+
+   4. The 'Ingredient' node with the ID 'exemestane' is connected to the 'Medication' node via an edge of type 'HAS_INGREDIENT'. This connection has a property 'tau_o': 1 and 'is_error': '1'.
+
+   5. The 'Patient' node is linked to both the 'Medication' and 'Ingredient' nodes through edges. One edge, of type 'TAKES_MEDICATION', indicates that this patient started taking the medication on '1958-11-10T13:57:11Z' and stopped on '1959-11-16T13:57:11Z'. The other edge, of type 'ALLERGIC_TO', does not have any specific start or stop dates.
+---
+
+OUTPUT FORMAT:
+
+Provide suggested repairs in the following structured format:
+
+<repairs> {op_code} | {target} | {details} </repairs>
+
+where:
+- {op_code} is one of (`ADD_NODE`, `ADD_EDGE`, `DEL_EDGE`, `UPD_NODE`, `UPD_EDGE`)
+- {target} specifies the affected node or relationship variable
+- {details} contains relevant property changes (key-value) or `-` if none
+
+Do NOT add explanations beyond the descriptions in the output.
+
+
+EXAMPLE OUTPUT #1: (e.g., if the allergy information is incorrect)
+<repairs>
+DEL_EDGE | [rm] | -
+</repairs>
+
+EXAMPLE OUTPUT #2: (e.g., if the ingredient information is incorrect)
+<repairs>
+DEL_EDGE | [rc] | -
+</repairs>

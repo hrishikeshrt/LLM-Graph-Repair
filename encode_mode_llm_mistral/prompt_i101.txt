@@ -1,0 +1,41 @@
+Based on the following description of an inconsistency
+suggest graph repairs to fix it:
+---
+
+        MATCH (p:Patient)-[rm:TAKES_MEDICATION]->(m:Medication)-[rc:HAS_INGREDIENT]->(i:Ingredient),
+            (p)-[ra:ALLERGIC_TO]->(i)
+        RETURN *
+        1. There is a node labeled as 'Ingredient' with the ID 'mestranol'. It has a property 'tau_o' with a value of 1.
+
+   2. There is another node labeled as 'Medication', specifically 'Humulin 70/30 Injectable Suspension', with the code '106892'. This node also has a 'tau_o' property with a value of 1 and a 'description' property that states its name.
+
+   3. There is a third node labeled as 'Patient' with the ID '3acf9313-1874-4dff-ab2a-3187516d92d6'. This node has properties such as 'address', 'birthdate', 'last', 'first', 'deathdate', and 'id'.
+
+   4. The node with the ID 'mestranol' (Ingredient) is connected to the medication node through an edge of type 'HAS_INGREDIENT'. This edge has a property 'tau_o' with a value of 1, and an 'is_error' property with a value of '1'.
+
+   5. The patient node is connected to both the ingredient and medication nodes. The connection to the ingredient node is through an edge of type 'ALLERGIC_TO', with properties including 'tau_o' and 'is_error'. The connection to the medication node is through an edge of type 'TAKES_MEDICATION', with properties such as 'start', 'stop', and 'tau_o'.
+---
+
+OUTPUT FORMAT:
+
+Provide suggested repairs in the following structured format:
+
+<repairs> {op_code} | {target} | {details} </repairs>
+
+where:
+- {op_code} is one of (`ADD_NODE`, `ADD_EDGE`, `DEL_EDGE`, `UPD_NODE`, `UPD_EDGE`)
+- {target} specifies the affected node or relationship variable
+- {details} contains relevant property changes (key-value) or `-` if none
+
+Do NOT add explanations beyond the descriptions in the output.
+
+
+EXAMPLE OUTPUT #1: (e.g., if the allergy information is incorrect)
+<repairs>
+DEL_EDGE | [rm] | -
+</repairs>
+
+EXAMPLE OUTPUT #2: (e.g., if the ingredient information is incorrect)
+<repairs>
+DEL_EDGE | [rc] | -
+</repairs>

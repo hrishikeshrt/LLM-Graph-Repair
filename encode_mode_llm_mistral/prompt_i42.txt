@@ -1,0 +1,38 @@
+Based on the following description of an inconsistency
+suggest graph repairs to fix it:
+---
+
+        MATCH (p:Patient)-[rm:TAKES_MEDICATION]->(m:Medication)-[rc:HAS_INGREDIENT]->(i:Ingredient),
+            (p)-[ra:ALLERGIC_TO]->(i)
+        RETURN *
+        1. There is a node labeled as 'Ingredient' (4:e00e4730-b338-4d2b-b715-75b0e15ece93:6681) with the property 'tau_o' set to 1 and an id of 'chlorthalidone'.
+  2. There is a node labeled as 'Medication' (4:e00e4730-b338-4d2b-b715-75b0e15ece93:6678) with the properties 'code' set to '746030', 'tau_o' set to 1, and a description of 'Tenoretic 50 Oral Tablet'.
+  3. There is a node labeled as 'Patient' (4:e00e4730-b338-4d2b-b715-75b0e15ece93:5650) with the properties 'address' set to "1028 O'Hara Corner Unit 84", 'birthdate' set to '1935-08-25', an empty 'tau_k', an id of '1786920f-c6fd-4fa7-a0dc-70a5ccc1fc79', a first name of 'Cassandra224', and a last name of 'O'Reilly797'.
+  4. The node labeled as 'Ingredient' (4:e00e4730-b338-4d2b-b715-75b0e15ece93:6681) has an edge pointing to the node labeled as 'Medication' (4:e00e4730-b338-4d2b-b715-75b0e15ece93:6678), with a key of 5:e00e4730-b338-4d2b-b715-75b0e15ece93:51904, a type of 'HAS_INGREDIENT', and properties with 'tau_o' set to 1 and 'is_error' set to '0'.
+  5. The node labeled as 'Patient' (4:e00e4730-b338-4d2b-b715-75b0e15ece93:5650) has an edge pointing to the node labeled as 'Medication' (4:e00e4730-b338-4d2b-b715-75b0e15ece93:6678), with a key of 5:e00e4730-b338-4d2b-b715-75b0e15ece93:974, a type of 'ALLERGIC_TO', properties with an empty 'tau_o' and 'is_error' set to '1'.
+  6. The node labeled as 'Patient' (4:e00e4730-b338-4d2b-b715-75b0e15ece93:5650) also has an edge pointing to the node labeled as 'Medication' (4:e00e4730-b338-4d2b-b715-75b0e15ece93:6678), with a key of 5:e00e4730-b338-4d2b-b715-75b0e15ece93:793, a type of 'TAKES_MEDICATION', properties with 'stop' set to '1983-04-04T01:14:18Z', 'start' set to '1982-03-29T01:14:18Z', and an empty 'tau_o'.
+---
+
+OUTPUT FORMAT:
+
+Provide suggested repairs in the following structured format:
+
+<repairs> {op_code} | {target} | {details} </repairs>
+
+where:
+- {op_code} is one of (`ADD_NODE`, `ADD_EDGE`, `DEL_EDGE`, `UPD_NODE`, `UPD_EDGE`)
+- {target} specifies the affected node or relationship variable
+- {details} contains relevant property changes (key-value) or `-` if none
+
+Do NOT add explanations beyond the descriptions in the output.
+
+
+EXAMPLE OUTPUT #1: (e.g., if the allergy information is incorrect)
+<repairs>
+DEL_EDGE | [rm] | -
+</repairs>
+
+EXAMPLE OUTPUT #2: (e.g., if the ingredient information is incorrect)
+<repairs>
+DEL_EDGE | [rc] | -
+</repairs>

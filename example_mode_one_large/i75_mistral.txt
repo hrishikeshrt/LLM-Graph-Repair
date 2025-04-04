@@ -1,0 +1,14 @@
+ <repairs>
+    DEL_EDGE | (rc) | WHERE i.id = 'epoetin alfa'
+    UPD_NODE | (p) | -
+    ADD_EDGE | (p)-[:TAKES_MEDICATION]-> (m:Medication {description:'1 ML Epogen 4000 UNT/ML Injection'}) | -
+    DEL_EDGE | (ra) | WHERE i.id = 'epoetin alfa'
+    UPD_NODE | (i) | id='another-ingredient-id' | WHERE i.id != 'epoetin alfa' AND p.first = 'Walker122'
+   </repairs>
+
+Explanation:
+- Remove the existing relationship between Medicine and Ingredient for epoetin alfa, as Walker122 should not be taking a medicine containing this ingredient (DEL_EDGE | (rc)).
+- Update the Patient node with no changes (UPD_NODE | (p)).
+- Add a new Medicine node with the correct description and establish a TAKES_MEDICATION relationship with Walker122 (ADD_EDGE | (p)-[:TAKES_MEDICATION]-> (m)).
+- Remove the existing ALLERGIC_TO relationship between Patient and Ingredient for epoetin alfa (DEL_EDGE | (ra)).
+- Update the Ingredient node with a new id, as it should not be epoetin alfa anymore. This update is only applied to the ingredient that Walker122 is not allergic to (UPD_NODE | (i)).

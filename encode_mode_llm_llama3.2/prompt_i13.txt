@@ -1,0 +1,39 @@
+Based on the following description of an inconsistency
+suggest graph repairs to fix it:
+---
+
+        MATCH (p:Patient)-[rm:TAKES_MEDICATION]->(m:Medication)-[rc:HAS_INGREDIENT]->(i:Ingredient),
+            (p)-[ra:ALLERGIC_TO]->(i)
+        RETURN *
+        The graph represents a patient's medical information. The patient is identified by the node with ID [cae10920-f977-48b4-a0d3-4d70ad561fd1]. 
+
+This patient has taken medication, as indicated by the edge from [cae10920-f977-48b4-a0d3-4d70ad561fd1] to [4:e00e4730-b338-4d2b-b715-75b0e15ece93:6846], which is labeled as "TAKES_MEDICATION". The medication taken by the patient is Epogen 4000 UNT/ML Injection, identified by code [205923].
+
+The patient has also been prescribed an opioid medication, oxycodone, with ID [oxycodone]. This relationship is established through another edge from [cae10920-f977-48b4-a0d3-4d70ad561fd1] to [4:e00e4730-b338-4d2b-b715-75b0e15ece93:6757], labeled as "HAS_INGREDIENT".
+
+Additionally, the patient has a known allergy to Epogen 4000 UNT/ML Injection. This relationship is established through an edge from [cae10920-f977-48b4-a0d3-4d70ad561fd1] to [4:e00e4730-b338-4d2b-b715-75b0e15ece93:6757], labeled as "ALLERGIC_TO".
+---
+
+OUTPUT FORMAT:
+
+Provide suggested repairs in the following structured format:
+
+<repairs> {op_code} | {target} | {details} </repairs>
+
+where:
+- {op_code} is one of (`ADD_NODE`, `ADD_EDGE`, `DEL_EDGE`, `UPD_NODE`, `UPD_EDGE`)
+- {target} specifies the affected node or relationship variable
+- {details} contains relevant property changes (key-value) or `-` if none
+
+Do NOT add explanations beyond the descriptions in the output.
+
+
+EXAMPLE OUTPUT #1: (e.g., if the allergy information is incorrect)
+<repairs>
+DEL_EDGE | [rm] | -
+</repairs>
+
+EXAMPLE OUTPUT #2: (e.g., if the ingredient information is incorrect)
+<repairs>
+DEL_EDGE | [rc] | -
+</repairs>

@@ -1,0 +1,35 @@
+Based on the following description of an inconsistency
+suggest graph repairs to fix it:
+---
+
+        MATCH (p:Patient)-[rm:TAKES_MEDICATION]->(m:Medication)-[rc:HAS_INGREDIENT]->(i:Ingredient),
+            (p)-[ra:ALLERGIC_TO]->(i)
+        RETURN *
+        The graph describes a scenario involving a patient, a medication, and an ingredient. The patient, identified as Altha90 Rolfson709 (ID: 9423451c-8c37-4700-a059-f8c2f9c636b0), was born on July 19, 1999, and lives at 606 O'Keefe Haven. This patient has taken a medication known as "120 ACTUAT Flovent 0.044 MG/ACTUAT Metered Dose Inhaler" (ID: 6711) from July 5, 2005, to November 1, 2005.
+
+The medication contains an ingredient called fluticasone (ID: 6712). Additionally, the patient is noted as being allergic to fluticasone, although there are no specific start or stop dates for this allergy recorded. The relationship between the medication and its ingredient is labeled as "HAS_INGREDIENT," while the patient's interactions with the medication and ingredient are described by "TAKES_MEDICATION" and "ALLERGIC_TO," respectively.
+---
+
+OUTPUT FORMAT:
+
+Provide suggested repairs in the following structured format:
+
+<repairs> {op_code} | {target} | {details} </repairs>
+
+where:
+- {op_code} is one of (`ADD_NODE`, `ADD_EDGE`, `DEL_EDGE`, `UPD_NODE`, `UPD_EDGE`)
+- {target} specifies the affected node or relationship variable
+- {details} contains relevant property changes (key-value) or `-` if none
+
+Do NOT add explanations beyond the descriptions in the output.
+
+
+EXAMPLE OUTPUT #1: (e.g., if the allergy information is incorrect)
+<repairs>
+DEL_EDGE | [rm] | -
+</repairs>
+
+EXAMPLE OUTPUT #2: (e.g., if the ingredient information is incorrect)
+<repairs>
+DEL_EDGE | [rc] | -
+</repairs>

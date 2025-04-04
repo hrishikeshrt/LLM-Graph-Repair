@@ -1,0 +1,41 @@
+Based on the following description of an inconsistency
+suggest graph repairs to fix it:
+---
+
+        MATCH (p:Patient)-[rm:TAKES_MEDICATION]->(m:Medication)-[rc:HAS_INGREDIENT]->(i:Ingredient),
+            (p)-[ra:ALLERGIC_TO]->(i)
+        RETURN *
+        The graph represents a patient's medical information. The patient is identified by the node with ID [3f336702-bf73-4fc8-bd59-3ba77fd65d0d] and has an address at [935 Rempel Trail]. The patient was born on June 22, 1923.
+
+The patient takes medication, which is represented by the node with ID [205923], containing information about a specific medication (1 ML Epogen 4000 UNT/ML Injection). This medication is administered to the patient due to an underlying medical condition.
+
+The patient also has a history of taking oxycodone, as indicated by the edge connecting the patient's node to the oxycodone node. However, it appears that this information may be related to an error or discrepancy in the data.
+
+Additionally, there is an allergy between the patient and the medication they are taking, which is represented by another edge. The start and stop dates for this allergy are not specified.
+
+The graph also shows the relationship between the patient's node and the oxycodone node through the "HAS_INGREDIENT" type edge, indicating that oxycodone is an ingredient in the medication being taken.
+---
+
+OUTPUT FORMAT:
+
+Provide suggested repairs in the following structured format:
+
+<repairs> {op_code} | {target} | {details} </repairs>
+
+where:
+- {op_code} is one of (`ADD_NODE`, `ADD_EDGE`, `DEL_EDGE`, `UPD_NODE`, `UPD_EDGE`)
+- {target} specifies the affected node or relationship variable
+- {details} contains relevant property changes (key-value) or `-` if none
+
+Do NOT add explanations beyond the descriptions in the output.
+
+
+EXAMPLE OUTPUT #1: (e.g., if the allergy information is incorrect)
+<repairs>
+DEL_EDGE | [rm] | -
+</repairs>
+
+EXAMPLE OUTPUT #2: (e.g., if the ingredient information is incorrect)
+<repairs>
+DEL_EDGE | [rc] | -
+</repairs>

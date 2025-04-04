@@ -1,0 +1,38 @@
+Based on the following description of an inconsistency
+suggest graph repairs to fix it:
+---
+
+        MATCH (p:Patient)-[rm:TAKES_MEDICATION]->(m:Medication)-[rc:HAS_INGREDIENT]->(i:Ingredient),
+            (p)-[ra:ALLERGIC_TO]->(i)
+        RETURN *
+        1. There is a node labeled as 'Ingredient' with the ID 'warfarin'. Its property 'tau_o' has a value of 1.
+  2. There is another node labeled as 'Medication', identified by the code '855332' and described as 'Coumadin 5 MG Oral Tablet'. This node also has a 'tau_o' property with a value of 1.
+  3. A third node represents a 'Patient' named Samatha845, born on February 14, 1941, and living at 531 Collier Wynd. This node does not have any initial or final death date, and its 'tau_o' property is 0.
+  4. The medication node (Coumadin 5 MG Oral Tablet) has an edge connecting to the ingredient node (warfarin). This connection indicates that the medication contains warfarin as an ingredient.
+  5. There is an edge between the patient node and the medication node, indicating that Samatha845 takes Coumadin 5 MG Oral Tablet. The start date of this medication is July 3, 1998, and it was stopped on July 31, 1998.
+  6. Additionally, there is an edge between the patient node and the patient herself, indicating that Samatha845 has an allergy or adverse reaction to herself (possibly a typo).
+---
+
+OUTPUT FORMAT:
+
+Provide suggested repairs in the following structured format:
+
+<repairs> {op_code} | {target} | {details} </repairs>
+
+where:
+- {op_code} is one of (`ADD_NODE`, `ADD_EDGE`, `DEL_EDGE`, `UPD_NODE`, `UPD_EDGE`)
+- {target} specifies the affected node or relationship variable
+- {details} contains relevant property changes (key-value) or `-` if none
+
+Do NOT add explanations beyond the descriptions in the output.
+
+
+EXAMPLE OUTPUT #1: (e.g., if the allergy information is incorrect)
+<repairs>
+DEL_EDGE | [rm] | -
+</repairs>
+
+EXAMPLE OUTPUT #2: (e.g., if the ingredient information is incorrect)
+<repairs>
+DEL_EDGE | [rc] | -
+</repairs>

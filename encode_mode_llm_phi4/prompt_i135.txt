@@ -1,0 +1,42 @@
+Based on the following description of an inconsistency
+suggest graph repairs to fix it:
+---
+
+        MATCH (p:Patient)-[rm:TAKES_MEDICATION]->(m:Medication)-[rc:HAS_INGREDIENT]->(i:Ingredient),
+            (p)-[ra:ALLERGIC_TO]->(i)
+        RETURN *
+        The graph describes a network involving an ingredient, a medication, and a patient. The ingredient is identified as "mestranol" with a unique ID of `e00e4730-b338-4d2b-b715-75b0e15ece93:6776`. It has a property labeled 'tau_o' set to 1.
+
+The medication, "Humulin 70/30 Injectable Suspension," is identified by the code '106892' and has an ID of `e00e4730-b338-4d2b-b715-75b0e15ece93:6786`. It also possesses a property labeled 'tau_o' with a value of 1.
+
+The patient, named Boyd728 Beahan375, resides at 698 Lehner Light. The patient's birthdate is November 19, 1911, and they passed away on November 3, 1975. This individual has an ID of `e00e4730-b338-4d2b-b715-75b0e15ece93:6223`.
+
+There are several relationships in the graph:
+1. The medication "Humulin 70/30 Injectable Suspension" contains the ingredient mestranol, as indicated by a HAS_INGREDIENT relationship with property 'tau_o' set to 1 and an error flag marked as '1'.
+2. The patient Boyd728 Beahan375 is allergic to mestranol, represented by an ALLERGIC_TO relationship that has no start or stop dates and a 'tau_o' value of 0 without any errors.
+3. The patient took the medication "Humulin 70/30 Injectable Suspension" from July 25, 1965, to September 26, 1965, as indicated by a TAKES_MEDICATION relationship with respective start and stop dates, a 'tau_o' value of 0, and no error flag.
+---
+
+OUTPUT FORMAT:
+
+Provide suggested repairs in the following structured format:
+
+<repairs> {op_code} | {target} | {details} </repairs>
+
+where:
+- {op_code} is one of (`ADD_NODE`, `ADD_EDGE`, `DEL_EDGE`, `UPD_NODE`, `UPD_EDGE`)
+- {target} specifies the affected node or relationship variable
+- {details} contains relevant property changes (key-value) or `-` if none
+
+Do NOT add explanations beyond the descriptions in the output.
+
+
+EXAMPLE OUTPUT #1: (e.g., if the allergy information is incorrect)
+<repairs>
+DEL_EDGE | [rm] | -
+</repairs>
+
+EXAMPLE OUTPUT #2: (e.g., if the ingredient information is incorrect)
+<repairs>
+DEL_EDGE | [rc] | -
+</repairs>

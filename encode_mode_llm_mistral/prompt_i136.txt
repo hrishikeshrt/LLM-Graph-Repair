@@ -1,0 +1,36 @@
+Based on the following description of an inconsistency
+suggest graph repairs to fix it:
+---
+
+        MATCH (p:Patient)-[rm:TAKES_MEDICATION]->(m:Medication)-[rc:HAS_INGREDIENT]->(i:Ingredient),
+            (p)-[ra:ALLERGIC_TO]->(i)
+        RETURN *
+         Node with ID 'a708bca4-8fc9-4567-8c22-8b13d44f4f45' is labeled as a Patient, born on 1944-04-14, living at 356 Kuhn Grove Suite 62. This patient has an ID 'naproxen' for an Ingredient and takes the medication 'verapamil hydrochloride 40 MG Oral Tablet', which has code '897718'.
+   The patient 'a708bca4-8fc9-4567-8c22-8b13d44f4f45' is allergic to no medications.
+   The patient 'a708bca4-8fc9-4567-8c22-8b13d44f4f45' started taking the medication 'verapamil hydrochloride 40 MG Oral Tablet' on 1998-03-13 and stopped taking it on 1998-05-08.
+   The Ingredient with ID 'naproxen' is a part of the medication 'verapamil hydrochloride 40 MG Oral Tablet'.
+---
+
+OUTPUT FORMAT:
+
+Provide suggested repairs in the following structured format:
+
+<repairs> {op_code} | {target} | {details} </repairs>
+
+where:
+- {op_code} is one of (`ADD_NODE`, `ADD_EDGE`, `DEL_EDGE`, `UPD_NODE`, `UPD_EDGE`)
+- {target} specifies the affected node or relationship variable
+- {details} contains relevant property changes (key-value) or `-` if none
+
+Do NOT add explanations beyond the descriptions in the output.
+
+
+EXAMPLE OUTPUT #1: (e.g., if the allergy information is incorrect)
+<repairs>
+DEL_EDGE | [rm] | -
+</repairs>
+
+EXAMPLE OUTPUT #2: (e.g., if the ingredient information is incorrect)
+<repairs>
+DEL_EDGE | [rc] | -
+</repairs>

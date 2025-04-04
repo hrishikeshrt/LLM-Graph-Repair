@@ -1,0 +1,45 @@
+Based on the following description of an inconsistency
+suggest graph repairs to fix it:
+---
+
+        MATCH (p:Patient)-[rm:TAKES_MEDICATION]->(m:Medication)-[rc:HAS_INGREDIENT]->(i:Ingredient),
+            (p)-[ra:ALLERGIC_TO]->(i)
+        RETURN *
+        There is a graph consisting of three nodes and three edges. The first node represents an ingredient identified by the ID `e00e4730-b338-4d2b-b715-75b0e15ece93` with the label 'Ingredient' and property 'tau_o' set to 1. This ingredient is oxycodone.
+
+The second node, also identified by the same ID but different label, represents a medication labeled as 'Medication'. It has properties including a code `205923`, a description '1 ML Epogen 4000 UNT/ML Injection', and 'tau_o' set to 1.
+
+The third node is a patient with the ID `3f336702-bf73-4fc8-bd59-3ba77fd65d0d`. The label for this node is 'Patient'. The properties include an address at '935 Rempel Trail', a birthdate of June 22, 1923, and no death date. This patient's first name is Sanford861, last name Fritsch593, and has 'tau_o' set to 0.
+
+There are three edges connecting these nodes:
+
+1. An edge from the medication node (ID: `e00e4730-b338-4d2b-b715-75b0e15ece93:6846`) to the ingredient node (ID: `e00e4730-b338-4d2b-b715-75b0e15ece93:6757`). This edge is of type 'HAS_INGREDIENT', indicating that the medication contains oxycodone. The properties include 'tau_o' set to 1 and an error flag 'is_error' set to '1'.
+
+2. An edge from the patient node (ID: `e00e4730-b338-4d2b-b715-75b0e15ece93:5840`) to the ingredient node (ID: `e00e4730-b338-4d2b-b715-75b0e15ece93:6757`). This edge is of type 'ALLERGIC_TO', indicating that the patient, Sanford861 Fritsch593, is allergic to oxycodone. The properties include 'tau_o' set to 0 and no error flag.
+
+3. An edge from the patient node (ID: `e00e4730-b338-4d2b-b715-75b0e15ece93:5840`) to the medication node (ID: `e00e4730-b338-4d2b-b715-75b0e15ece93:6846`). This edge is of type 'TAKES_MEDICATION', indicating that Sanford861 Fritsch593 takes Epogen 4000 UNT/ML Injection. The properties include both start and stop dates set to January 1, 2016, at 09:55:43Z, with 'tau_o' set to 0 and no error flag.
+---
+
+OUTPUT FORMAT:
+
+Provide suggested repairs in the following structured format:
+
+<repairs> {op_code} | {target} | {details} </repairs>
+
+where:
+- {op_code} is one of (`ADD_NODE`, `ADD_EDGE`, `DEL_EDGE`, `UPD_NODE`, `UPD_EDGE`)
+- {target} specifies the affected node or relationship variable
+- {details} contains relevant property changes (key-value) or `-` if none
+
+Do NOT add explanations beyond the descriptions in the output.
+
+
+EXAMPLE OUTPUT #1: (e.g., if the allergy information is incorrect)
+<repairs>
+DEL_EDGE | [rm] | -
+</repairs>
+
+EXAMPLE OUTPUT #2: (e.g., if the ingredient information is incorrect)
+<repairs>
+DEL_EDGE | [rc] | -
+</repairs>

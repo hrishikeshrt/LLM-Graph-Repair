@@ -1,0 +1,47 @@
+Based on the following description of an inconsistency
+suggest graph repairs to fix it:
+---
+
+        MATCH (p:Patient)-[rm:TAKES_MEDICATION]->(m:Medication)-[rc:HAS_INGREDIENT]->(i:Ingredient),
+            (p)-[ra:ALLERGIC_TO]->(i)
+        RETURN *
+         There are three nodes in this graph.
+
+   The first node (4:e00e4730-b338-4d2b-b715-75b0e15ece93:6776) is labeled as 'Ingredient' and has the property 'tau_o': 1, with the ID 'mestranol'.
+
+   The second node (4:e00e4730-b338-4d2b-b715-75b0e15ece93:6786) is labeled as 'Medication' and has the properties 'code': '106892', 'tau_o': 1, and 'description': 'Humulin 70/30 Injectable Suspension'.
+
+   The third node (4:e00e4730-b338-4d2b-b715-75b0e15ece93:6203) is labeled as 'Patient' and has properties such as 'address': '1081 Orn Street', 'birthdate': '1913-05-30', 'tau_k': [], 'last': 'Brekke496', 'tau_o': 0, 'deathdate': '2009-05-02', 'id': 'cae10920-f977-48b4-a0d3-4d70ad561fd1', and 'first': 'Logan497'.
+
+   There are also three edges connecting these nodes.
+
+   The first edge (4:e00e4730-b338-4d2b-b715-75b0e15ece93:6786 -> 4:e00e4730-b338-4d2b-b715-75b0e15ece93:6776) connects the 'Medication' node to the 'Ingredient' node, with the type being 'HAS_INGREDIENT', and it has the property 'tau_o': 1.
+
+   The second edge (4:e00e4730-b338-4d2b-b715-75b0e15ece93:6203 -> 4:e00e4730-b338-4d2b-b715-75b0e15ece93:6776) connects the 'Patient' node to the 'Ingredient' node, with the type being 'ALLERGIC_TO', and it has the properties 'stop': '', 'start': '', 'tau_o': 0, and 'is_error': '0'.
+
+   The third edge (4:e00e4730-b338-4d2b-b715-75b0e15ece93:6203 -> 4:e00e4730-b338-4d2b-b715-75b0e15ece93:6786) connects the 'Patient' node to the 'Medication' node, with the type being 'TAKES_MEDICATION', and it has properties such as 'stop': '1984-10-12T23:35:03Z', 'tau_o': 0, and 'start': '1984-09-22T23:35:03Z'.
+---
+
+OUTPUT FORMAT:
+
+Provide suggested repairs in the following structured format:
+
+<repairs> {op_code} | {target} | {details} </repairs>
+
+where:
+- {op_code} is one of (`ADD_NODE`, `ADD_EDGE`, `DEL_EDGE`, `UPD_NODE`, `UPD_EDGE`)
+- {target} specifies the affected node or relationship variable
+- {details} contains relevant property changes (key-value) or `-` if none
+
+Do NOT add explanations beyond the descriptions in the output.
+
+
+EXAMPLE OUTPUT #1: (e.g., if the allergy information is incorrect)
+<repairs>
+DEL_EDGE | [rm] | -
+</repairs>
+
+EXAMPLE OUTPUT #2: (e.g., if the ingredient information is incorrect)
+<repairs>
+DEL_EDGE | [rc] | -
+</repairs>

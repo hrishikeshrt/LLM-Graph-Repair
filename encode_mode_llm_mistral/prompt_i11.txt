@@ -1,0 +1,38 @@
+Based on the following description of an inconsistency
+suggest graph repairs to fix it:
+---
+
+        MATCH (p:Patient)-[rm:TAKES_MEDICATION]->(m:Medication)-[rc:HAS_INGREDIENT]->(i:Ingredient),
+            (p)-[ra:ALLERGIC_TO]->(i)
+        RETURN *
+        1. There is a node labeled as 'Ingredient' (4:e00e4730-b338-4d2b-b715-75b0e15ece93:6757). Its property 'id' is 'oxycodone'.
+  2. There is another node labeled as 'Medication' (4:e00e4730-b338-4d2b-b715-75b0e15ece93:6846). Its code is '205923', its description is '1 ML Epogen 4000 UNT/ML Injection'.
+  3. There is a node labeled as 'Patient' (4:e00e4730-b338-4d2b-b715-75b0e15ece93:6203). Its properties include the address '1081 Orn Street', birthdate '1913-05-30', id 'cae10920-f977-48b4-a0d3-4d70ad561fd1', first name 'Logan497', last name 'Brekke496'.
+  4. The node labeled as 'Ingredient' (4:e00e4730-b338-4d2b-b715-75b0e15ece93:6757) has an edge connected to the node labeled as 'Medication' (4:e00e4730-b338-4d2b-b715-75b0e15ece93:6846). The type of this edge is 'HAS_INGREDIENT'.
+  5. The node labeled as 'Patient' (4:e00e4730-b338-4d2b-b715-75b0e15ece93:6203) has an edge connected to the node labeled as 'Ingredient' (4:e00e4730-b338-4d2b-b715-75b0e15ece93:6757). The type of this edge is 'ALLERGIC_TO'.
+  6. The node labeled as 'Patient' (4:e00e4730-b338-4d2b-b715-75b0e15ece93:6203) also has an edge connected to the node labeled as 'Medication' (4:e00e4730-b338-4d2b-b715-75b0e15ece93:6846). The type of this edge is 'TAKES_MEDICATION'. The start and stop dates for this medication are both '2008-10-30T23:35:03Z'.
+---
+
+OUTPUT FORMAT:
+
+Provide suggested repairs in the following structured format:
+
+<repairs> {op_code} | {target} | {details} </repairs>
+
+where:
+- {op_code} is one of (`ADD_NODE`, `ADD_EDGE`, `DEL_EDGE`, `UPD_NODE`, `UPD_EDGE`)
+- {target} specifies the affected node or relationship variable
+- {details} contains relevant property changes (key-value) or `-` if none
+
+Do NOT add explanations beyond the descriptions in the output.
+
+
+EXAMPLE OUTPUT #1: (e.g., if the allergy information is incorrect)
+<repairs>
+DEL_EDGE | [rm] | -
+</repairs>
+
+EXAMPLE OUTPUT #2: (e.g., if the ingredient information is incorrect)
+<repairs>
+DEL_EDGE | [rc] | -
+</repairs>

@@ -1,0 +1,39 @@
+Based on the following description of an inconsistency
+suggest graph repairs to fix it:
+---
+
+        MATCH (p:Patient)-[rm:TAKES_MEDICATION]->(m:Medication)-[rc:HAS_INGREDIENT]->(i:Ingredient),
+            (p)-[ra:ALLERGIC_TO]->(i)
+        RETURN *
+        The graph represents a patient's information. The patient is identified as [09cbb3f1-c2ed-426c-8c53-ffda77efcb08] and was born on February 26, 1950. The patient's address is located at Keebler Village. 
+
+A medication, Humulin 70/30 Injectable Suspension ([106892]), is prescribed to the patient. The medication has a start date of May 5, 2002, and an end date of August 25, 2002.
+
+The patient also has an ingredient in their medication, which is [frozenset({'Ingredient'})]. 
+
+Additionally, the patient was diagnosed with being allergic to another ingredient in their medication. The allergy started on May 5, 2002, and stopped on September 1, 2010.
+---
+
+OUTPUT FORMAT:
+
+Provide suggested repairs in the following structured format:
+
+<repairs> {op_code} | {target} | {details} </repairs>
+
+where:
+- {op_code} is one of (`ADD_NODE`, `ADD_EDGE`, `DEL_EDGE`, `UPD_NODE`, `UPD_EDGE`)
+- {target} specifies the affected node or relationship variable
+- {details} contains relevant property changes (key-value) or `-` if none
+
+Do NOT add explanations beyond the descriptions in the output.
+
+
+EXAMPLE OUTPUT #1: (e.g., if the allergy information is incorrect)
+<repairs>
+DEL_EDGE | [rm] | -
+</repairs>
+
+EXAMPLE OUTPUT #2: (e.g., if the ingredient information is incorrect)
+<repairs>
+DEL_EDGE | [rc] | -
+</repairs>

@@ -1,0 +1,38 @@
+Based on the following description of an inconsistency
+suggest graph repairs to fix it:
+---
+
+        MATCH (p:Patient)-[rm:TAKES_MEDICATION]->(m:Medication)-[rc:HAS_INGREDIENT]->(i:Ingredient),
+            (p)-[ra:ALLERGIC_TO]->(i)
+        RETURN *
+         Node with ID 'f9149e25-1799-44bf-a5aa-449b41161345' is a patient named Valrie435, born on 1981-05-26 and living at 939 Gutmann Alley.
+   The node with ID 'mestranol' is an ingredient labeled as 'Ingredient'. Its unique identifier is 'tau_o': 1 and 'id': 'mestranol'.
+   The node with ID '106892' is a medication labeled as 'Medication'. It has the code '106892', description 'Humulin 70/30 Injectable Suspension', and identifier 'tau_o': 1.
+   There is an edge from the patient node to the ingredient node with type 'HAS_INGREDIENT'. The key of this edge is 5:e00e4730-b338-4d2b-b715-75b0e15ece93:51991, and it has property 'is_error': '1'.
+   There is an edge from the patient node to the medication node with type 'ALLERGIC_TO'. The key of this edge is 5:e00e4730-b338-4d2b-b715-75b0e15ece93:991, and it has property 'is_error': '0'.
+   There is an edge from the patient node to the medication node with type 'TAKES_MEDICATION'. The key of this edge is 5:e00e4730-b338-4d2b-b715-75b0e15ece93:684. It starts on 2019-08-13T11:09:02Z, stops on 2019-09-17T11:09:02Z, and has no error.
+---
+
+OUTPUT FORMAT:
+
+Provide suggested repairs in the following structured format:
+
+<repairs> {op_code} | {target} | {details} </repairs>
+
+where:
+- {op_code} is one of (`ADD_NODE`, `ADD_EDGE`, `DEL_EDGE`, `UPD_NODE`, `UPD_EDGE`)
+- {target} specifies the affected node or relationship variable
+- {details} contains relevant property changes (key-value) or `-` if none
+
+Do NOT add explanations beyond the descriptions in the output.
+
+
+EXAMPLE OUTPUT #1: (e.g., if the allergy information is incorrect)
+<repairs>
+DEL_EDGE | [rm] | -
+</repairs>
+
+EXAMPLE OUTPUT #2: (e.g., if the ingredient information is incorrect)
+<repairs>
+DEL_EDGE | [rc] | -
+</repairs>

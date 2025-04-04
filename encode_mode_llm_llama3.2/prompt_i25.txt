@@ -1,0 +1,39 @@
+Based on the following description of an inconsistency
+suggest graph repairs to fix it:
+---
+
+        MATCH (p:Patient)-[rm:TAKES_MEDICATION]->(m:Medication)-[rc:HAS_INGREDIENT]->(i:Ingredient),
+            (p)-[ra:ALLERGIC_TO]->(i)
+        RETURN *
+        Node [4:e00e4730-b338-4d2b-b715-75b0e15ece93] is a medication with code [205923], description of which includes the injection Epogen 4000 UNT/ML. It belongs to the category of Ingredient and has an ID of oxycodone.
+
+Node [4:e00e4730-b338-4d2b-b715-75b0e15ece93] is also a patient with address at Orn Street, birthdate in 1913, and death date in 2009. The patient's first name is Logan497 and last name is Brekke496.
+
+The medication [205923] is taken by the patient [4:e00e4730-b338-4d2b-b715-75b0e15ece93] from [2001-02-27T23:35:03Z] onwards. The patient has an allergy to [205923], which was first noted on a certain date, and the medication is administered as part of treatment for this condition.
+
+The patient's relationship with the medication can be described as follows: the patient takes the medication (TAKES_MEDICATION), and the medication belongs to the category of Ingredient.
+---
+
+OUTPUT FORMAT:
+
+Provide suggested repairs in the following structured format:
+
+<repairs> {op_code} | {target} | {details} </repairs>
+
+where:
+- {op_code} is one of (`ADD_NODE`, `ADD_EDGE`, `DEL_EDGE`, `UPD_NODE`, `UPD_EDGE`)
+- {target} specifies the affected node or relationship variable
+- {details} contains relevant property changes (key-value) or `-` if none
+
+Do NOT add explanations beyond the descriptions in the output.
+
+
+EXAMPLE OUTPUT #1: (e.g., if the allergy information is incorrect)
+<repairs>
+DEL_EDGE | [rm] | -
+</repairs>
+
+EXAMPLE OUTPUT #2: (e.g., if the ingredient information is incorrect)
+<repairs>
+DEL_EDGE | [rc] | -
+</repairs>

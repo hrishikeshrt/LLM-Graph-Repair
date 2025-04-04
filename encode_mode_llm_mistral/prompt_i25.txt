@@ -1,0 +1,38 @@
+Based on the following description of an inconsistency
+suggest graph repairs to fix it:
+---
+
+        MATCH (p:Patient)-[rm:TAKES_MEDICATION]->(m:Medication)-[rc:HAS_INGREDIENT]->(i:Ingredient),
+            (p)-[ra:ALLERGIC_TO]->(i)
+        RETURN *
+        1. There is a node labeled as 'Ingredient' (4:e00e4730-b338-4d2b-b715-75b0e15ece93:6757) with the property 'id' set to 'oxycodone'.
+  2. There is another node labeled as 'Medication' (4:e00e4730-b338-4d2b-b715-75b0e15ece93:6846) with the properties 'code' set to '205923', 'description' set to '1 ML Epogen 4000 UNT/ML Injection', and 'id' set to an empty string.
+  3. There is also a node labeled as 'Patient' (4:e00e4730-b338-4d2b-b715-75b0e15ece93:6203) with the properties 'address' set to '1081 Orn Street', 'birthdate' set to '1913-05-30', 'id' set to 'cae10920-f977-48b4-a0d3-4d70ad561fd1', 'first' set to 'Logan497', and 'last' set to 'Brekke496'.
+  4. The node labeled as 'Ingredient' (4:e00e4730-b338-4d2b-b715-75b0e15ece93:6757) is connected to the node labeled as 'Medication' (4:e00e4730-b338-4d2b-b715-75b0e15ece93:6846) by an edge with the type 'HAS_INGREDIENT'.
+  5. The node labeled as 'Patient' (4:e00e4730-b338-4d2b-b715-75b0e15ece93:6203) is connected to the node labeled as 'Ingredient' (4:e00e4730-b338-4d2b-b715-75b0e15ece93:6757) by an edge with the type 'ALLERGIC_TO'.
+  6. The node labeled as 'Patient' (4:e00e4730-b338-4d2b-b715-75b0e15ece93:6203) is also connected to the node labeled as 'Medication' (4:e00e4730-b338-4d2b-b715-75b0e15ece93:6846) by an edge with the type 'TAKES_MEDICATION'. The start and stop times for this edge are both set to '2001-02-27T23:35:03Z'.
+---
+
+OUTPUT FORMAT:
+
+Provide suggested repairs in the following structured format:
+
+<repairs> {op_code} | {target} | {details} </repairs>
+
+where:
+- {op_code} is one of (`ADD_NODE`, `ADD_EDGE`, `DEL_EDGE`, `UPD_NODE`, `UPD_EDGE`)
+- {target} specifies the affected node or relationship variable
+- {details} contains relevant property changes (key-value) or `-` if none
+
+Do NOT add explanations beyond the descriptions in the output.
+
+
+EXAMPLE OUTPUT #1: (e.g., if the allergy information is incorrect)
+<repairs>
+DEL_EDGE | [rm] | -
+</repairs>
+
+EXAMPLE OUTPUT #2: (e.g., if the ingredient information is incorrect)
+<repairs>
+DEL_EDGE | [rc] | -
+</repairs>

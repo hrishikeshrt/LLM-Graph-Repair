@@ -1,0 +1,37 @@
+Based on the following description of an inconsistency
+suggest graph repairs to fix it:
+---
+
+        MATCH (p:Patient)-[rm:TAKES_MEDICATION]->(m:Medication)-[rc:HAS_INGREDIENT]->(i:Ingredient),
+            (p)-[ra:ALLERGIC_TO]->(i)
+        RETURN *
+        The graph describes a network involving ingredients, medications, and a patient. 
+
+There is an ingredient identified by the ID `e00e4730-b338-4d2b-b715-75b0e15ece93:6691`, which is ferrous sulfate. This ingredient is associated with a medication labeled as `Medication` with the ID `e00e4730-b338-4d2b-b715-75b0e15ece93:6750`. The medication, "24 HR Glucophage 500 MG Extended Release Oral Tablet," has a code of '860975' and is linked to ferrous sulfate through a relationship type labeled as `HAS_INGREDIENT`. This connection has a property indicating it was last updated at time `tau_o = 1` and is marked with an error (`is_error: '1'`).
+
+Additionally, there is a patient identified by the ID `e00e4730-b338-4d2b-b715-75b0e15ece93:5840`, named Sanford Fritsch. The patient resides at 935 Rempel Trail and was born on June 22, 1923. This patient has an allergy to ferrous sulfate, as indicated by the `ALLERGIC_TO` relationship with a property `tau_o = 0` and no error (`is_error: '0'`). Furthermore, the patient takes "24 HR Glucophage 500 MG Extended Release Oral Tablet," with this medication-taking period starting on August 28, 2015, at 09:55:43Z and ending on September 25, 2015, at 09:55:43Z. This relationship is marked by `TAKES_MEDICATION` and has no error (`is_error: '0'`).
+---
+
+OUTPUT FORMAT:
+
+Provide suggested repairs in the following structured format:
+
+<repairs> {op_code} | {target} | {details} </repairs>
+
+where:
+- {op_code} is one of (`ADD_NODE`, `ADD_EDGE`, `DEL_EDGE`, `UPD_NODE`, `UPD_EDGE`)
+- {target} specifies the affected node or relationship variable
+- {details} contains relevant property changes (key-value) or `-` if none
+
+Do NOT add explanations beyond the descriptions in the output.
+
+
+EXAMPLE OUTPUT #1: (e.g., if the allergy information is incorrect)
+<repairs>
+DEL_EDGE | [rm] | -
+</repairs>
+
+EXAMPLE OUTPUT #2: (e.g., if the ingredient information is incorrect)
+<repairs>
+DEL_EDGE | [rc] | -
+</repairs>

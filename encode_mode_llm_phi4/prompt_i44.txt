@@ -1,0 +1,35 @@
+Based on the following description of an inconsistency
+suggest graph repairs to fix it:
+---
+
+        MATCH (p:Patient)-[rm:TAKES_MEDICATION]->(m:Medication)-[rc:HAS_INGREDIENT]->(i:Ingredient),
+            (p)-[ra:ALLERGIC_TO]->(i)
+        RETURN *
+        There is a graph that includes three nodes and three edges. The first node (Node ID: 6681) represents an ingredient identified as "chlorthalidone" with a property `tau_o` equal to 1. The second node (Node ID: 6678) represents a medication called "Tenoretic 50 Oral Tablet," which has a code '746030', a description, and a `tau_o` value of 1. The third node (Node ID: 5650) is a patient named Cassandra224 O'Reilly797, who was born on August 25, 1935, resides at "1028 O'Hara Corner Unit 84," and has a unique identifier with no recorded death date.
+
+The graph contains three edges that define relationships between these nodes. The first edge connects the medication node (6678) to the ingredient node (6681), indicating that "Tenoretic 50 Oral Tablet" has "chlorthalidone" as an ingredient, and this relationship is marked with a `tau_o` of 1 without any errors (`is_error`: '0'). The second edge connects the patient node (5650) to the ingredient node (6681), suggesting that Cassandra224 O'Reilly797 is allergic to "chlorthalidone," but this information has an error flag (`is_error`: '1') and a `tau_o` of 0. Lastly, the third edge links the patient node (5650) to the medication node (6678), showing that Cassandra224 O'Reilly797 took "Tenoretic 50 Oral Tablet" from July 28, 2003, to August 2, 2004, with a `tau_o` of 0 and no error.
+---
+
+OUTPUT FORMAT:
+
+Provide suggested repairs in the following structured format:
+
+<repairs> {op_code} | {target} | {details} </repairs>
+
+where:
+- {op_code} is one of (`ADD_NODE`, `ADD_EDGE`, `DEL_EDGE`, `UPD_NODE`, `UPD_EDGE`)
+- {target} specifies the affected node or relationship variable
+- {details} contains relevant property changes (key-value) or `-` if none
+
+Do NOT add explanations beyond the descriptions in the output.
+
+
+EXAMPLE OUTPUT #1: (e.g., if the allergy information is incorrect)
+<repairs>
+DEL_EDGE | [rm] | -
+</repairs>
+
+EXAMPLE OUTPUT #2: (e.g., if the ingredient information is incorrect)
+<repairs>
+DEL_EDGE | [rc] | -
+</repairs>

@@ -1,0 +1,38 @@
+Based on the following description of an inconsistency
+suggest graph repairs to fix it:
+---
+
+        MATCH (p:Patient)-[rm:TAKES_MEDICATION]->(m:Medication)-[rc:HAS_INGREDIENT]->(i:Ingredient),
+            (p)-[ra:ALLERGIC_TO]->(i)
+        RETURN *
+        1. There is a node labeled as 'Ingredient' with the ID 'warfarin'. Its tau value is 1.
+  2. There is another node labeled as 'Medication', having the code '855332' and description 'Coumadin 5 MG Oral Tablet'. Its tau value is also 1.
+  3. A third node represents a 'Patient' with ID '2c71dd97-7085-416a-aa07-d675bbe3adf2'. This patient's first name is Samatha845, last name is Mueller846, birthdate is 1941-02-14, and address is '531 Collier Wynd'.
+  4. The node representing the medication has an edge connected to the ingredient node 'warfarin', indicating that 'Coumadin 5 MG Oral Tablet' has warfarin as an ingredient.
+  5. There is another edge connecting the patient node to the medication node, implying that this patient takes Coumadin 5 MG Oral Tablet. The start date for this medication is '2019-12-06T20:51:21Z' and the stop date is '2020-01-10T20:51:21Z'.
+  6. Lastly, there is an edge connecting the patient node to the ingredient node 'warfarin', suggesting that this patient is allergic to warfarin. However, the specific start and stop dates for this allergy are not provided in the data.
+---
+
+OUTPUT FORMAT:
+
+Provide suggested repairs in the following structured format:
+
+<repairs> {op_code} | {target} | {details} </repairs>
+
+where:
+- {op_code} is one of (`ADD_NODE`, `ADD_EDGE`, `DEL_EDGE`, `UPD_NODE`, `UPD_EDGE`)
+- {target} specifies the affected node or relationship variable
+- {details} contains relevant property changes (key-value) or `-` if none
+
+Do NOT add explanations beyond the descriptions in the output.
+
+
+EXAMPLE OUTPUT #1: (e.g., if the allergy information is incorrect)
+<repairs>
+DEL_EDGE | [rm] | -
+</repairs>
+
+EXAMPLE OUTPUT #2: (e.g., if the ingredient information is incorrect)
+<repairs>
+DEL_EDGE | [rc] | -
+</repairs>

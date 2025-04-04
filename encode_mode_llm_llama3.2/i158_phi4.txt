@@ -1,0 +1,14 @@
+The inconsistency arises because an Ingredient node, labeled with ID `ferrous sulfate`, incorrectly has properties of a Medication. Specifically, it has a Medication code and description that should belong to a Medication node instead.
+
+To resolve this issue:
+
+1. Create a new Medication node with the correct properties.
+2. Relink the existing relationships from the Ingredient node to the newly created Medication node.
+
+Here are the suggested repairs:
+
+<repairs>
+ADD_NODE | (m:Medication) | {code: 860975, description: "24 HR Glucophage 500 MG Extended Release Oral Tablet"}
+DEL_EDGE | [rc] | -
+ADD_EDGE | (i)-[:HAS_INGREDIENT]->(m) | -
+</repairs>

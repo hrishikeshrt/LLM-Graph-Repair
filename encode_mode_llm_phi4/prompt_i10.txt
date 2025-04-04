@@ -1,0 +1,39 @@
+Based on the following description of an inconsistency
+suggest graph repairs to fix it:
+---
+
+        MATCH (p:Patient)-[rm:TAKES_MEDICATION]->(m:Medication)-[rc:HAS_INGREDIENT]->(i:Ingredient),
+            (p)-[ra:ALLERGIC_TO]->(i)
+        RETURN *
+        The graph consists of three nodes and three edges. Node [4:e00e4730-b338-4d2b-b715-75b0e15ece93:6757] represents an ingredient labeled as 'Ingredient' with the property ID 'oxycodone'. Node [4:e00e4730-b338-4d2b-b715-75b0e15ece93:6846] is a medication labeled as 'Medication', described as "1 ML Epogen 4000 UNT/ML Injection" and has the code '205923'. Node [4:e00e4730-b338-4d2b-b715-75b0e15ece93:6203] represents a patient named Logan Brekke, with an address at '1081 Orn Street', born on May 30, 1913, and deceased on May 2, 2009.
+
+There is an edge from the medication node [4:e00e4730-b338-4d2b-b715-75b0e15ece93:6846] to the ingredient node [4:e00e4730-b338-4d2b-b715-75b0e15ece93:6757], indicating that oxycodone is an ingredient of the medication Epogen, with a property 'tau_o' set to 1 and marked as an error.
+
+Another edge connects the patient node [4:e00e4730-b338-4d2b-b715-75b0e15ece93:6203] to the ingredient node [4:e00e4730-b338-4d2b-b715-75b0e15ece93:6757], showing that Logan Brekke is allergic to oxycodone, with 'tau_o' set to 0 and no error.
+
+Finally, there is an edge from the patient node [4:e00e4730-b338-4d2b-b715-75b0e15ece93:6203] to the medication node [4:e00e4730-b338-4d2b-b715-75b0e15ece93:6846], indicating that Logan Brekke took Epogen starting and stopping on March 7, 2003, at 23:35:03 UTC, with 'tau_o' set to 0 and no error.
+---
+
+OUTPUT FORMAT:
+
+Provide suggested repairs in the following structured format:
+
+<repairs> {op_code} | {target} | {details} </repairs>
+
+where:
+- {op_code} is one of (`ADD_NODE`, `ADD_EDGE`, `DEL_EDGE`, `UPD_NODE`, `UPD_EDGE`)
+- {target} specifies the affected node or relationship variable
+- {details} contains relevant property changes (key-value) or `-` if none
+
+Do NOT add explanations beyond the descriptions in the output.
+
+
+EXAMPLE OUTPUT #1: (e.g., if the allergy information is incorrect)
+<repairs>
+DEL_EDGE | [rm] | -
+</repairs>
+
+EXAMPLE OUTPUT #2: (e.g., if the ingredient information is incorrect)
+<repairs>
+DEL_EDGE | [rc] | -
+</repairs>

@@ -1,0 +1,33 @@
+Based on the following description of an inconsistency
+suggest graph repairs to fix it:
+---
+
+        MATCH (p:Patient)-[rm:TAKES_MEDICATION]->(m:Medication)-[rc:HAS_INGREDIENT]->(i:Ingredient),
+            (p)-[ra:ALLERGIC_TO]->(i)
+        RETURN *
+        There is a patient with the ID e1146189-55f3-4bad-9ee3-beca009d27a5, whose first name is Cruz300 and last name is O'Keefe54. The patient's address is 1044 Daniel Byway, and their birthdate is March 16, 1972. This patient takes a medication called Demerol 50 MG Oral Tablet, which has the code 861467. Additionally, the patient is allergic to ferrous sulfate. The patient started taking the medication on January 3, 2018, and stopped on May 6, 2018. Ferrous sulfate is also present as an ingredient in the medication Demerol 50 MG Oral Tablet.
+---
+
+OUTPUT FORMAT:
+
+Provide suggested repairs in the following structured format:
+
+<repairs> {op_code} | {target} | {details} </repairs>
+
+where:
+- {op_code} is one of (`ADD_NODE`, `ADD_EDGE`, `DEL_EDGE`, `UPD_NODE`, `UPD_EDGE`)
+- {target} specifies the affected node or relationship variable
+- {details} contains relevant property changes (key-value) or `-` if none
+
+Do NOT add explanations beyond the descriptions in the output.
+
+
+EXAMPLE OUTPUT #1: (e.g., if the allergy information is incorrect)
+<repairs>
+DEL_EDGE | [ra] | -
+</repairs>
+
+EXAMPLE OUTPUT #2: (e.g., if the ingredient information is incorrect)
+<repairs>
+DEL_EDGE | [rc] | -
+</repairs>

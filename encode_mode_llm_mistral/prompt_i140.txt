@@ -1,0 +1,38 @@
+Based on the following description of an inconsistency
+suggest graph repairs to fix it:
+---
+
+        MATCH (p:Patient)-[rm:TAKES_MEDICATION]->(m:Medication)-[rc:HAS_INGREDIENT]->(i:Ingredient),
+            (p)-[ra:ALLERGIC_TO]->(i)
+        RETURN *
+         Node with ID '4:e00e4730-b338-4d2b-b715-75b0e15ece93:6691' is labeled as 'Ingredient'. Its property is 'ferrous sulfate' with a tau value of 1.
+   Node with ID '4:e00e4730-b338-4d2b-b715-75b0e15ece93:6750' is labeled as 'Medication'. Its properties include a code '860975', a description '24 HR Glucophage 500 MG Extended Release Oral Tablet', and tau value of 1.
+   Node with ID '4:e00e4730-b338-4d2b-b715-75b0e15ece93:5996' is labeled as 'Patient'. Its properties include an address at '170 Kerluke Extension Suite 51', a birthdate on '1942-05-23', empty tau_k, ID '2c33932da-bde3-4d3c-a790-ff3b0fc4fb53', first name 'Marcellus830', and last name 'Lemke654'.
+   There is an edge from the 'Medication' node to the 'Ingredient' node with key '5:e00e4730-b338-4d2b-b715-75b0e15ece93:51961', type 'HAS_INGREDIENT', and properties indicating an error of '1'.
+   There is an edge from the 'Patient' node to the 'Ingredient' node with key '5:e00e4730-b338-4d2b-b715-75b0e15ece93:989', type 'ALLERGIC_TO', and properties indicating no error ('0').
+   There is an edge from the 'Patient' node to the 'Medication' node with key '5:e00e4730-b338-4d2b-b715-75b0e15ece93:735', type 'TAKES_MEDICATION', and properties indicating a start date of '1975-08-16T20:06:53Z' and an end date of '1976-08-21T20:06:53Z'.
+---
+
+OUTPUT FORMAT:
+
+Provide suggested repairs in the following structured format:
+
+<repairs> {op_code} | {target} | {details} </repairs>
+
+where:
+- {op_code} is one of (`ADD_NODE`, `ADD_EDGE`, `DEL_EDGE`, `UPD_NODE`, `UPD_EDGE`)
+- {target} specifies the affected node or relationship variable
+- {details} contains relevant property changes (key-value) or `-` if none
+
+Do NOT add explanations beyond the descriptions in the output.
+
+
+EXAMPLE OUTPUT #1: (e.g., if the allergy information is incorrect)
+<repairs>
+DEL_EDGE | [rm] | -
+</repairs>
+
+EXAMPLE OUTPUT #2: (e.g., if the ingredient information is incorrect)
+<repairs>
+DEL_EDGE | [rc] | -
+</repairs>

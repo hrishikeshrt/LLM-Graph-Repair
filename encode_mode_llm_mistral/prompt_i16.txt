@@ -1,0 +1,43 @@
+Based on the following description of an inconsistency
+suggest graph repairs to fix it:
+---
+
+        MATCH (p:Patient)-[rm:TAKES_MEDICATION]->(m:Medication)-[rc:HAS_INGREDIENT]->(i:Ingredient),
+            (p)-[ra:ALLERGIC_TO]->(i)
+        RETURN *
+        1. There is a node labeled as 'Ingredient' with the ID 'oxycodone'. It has a property 'tau_o' equal to 1.
+
+   2. There is another node labeled as 'Medication' with the ID '205923'. Its description is '1 ML Epogen 4000 UNT/ML Injection', and it also has a property 'tau_o' equal to 1.
+
+   3. There is a third node labeled as 'Patient' with the ID 'cae10920-f977-48b4-a0d3-4d70ad561fd1'. Its first name is 'Logan497', last name is 'Brekke496', birthdate is '1913-05-30', address is '1081 Orn Street', deathdate is '2009-05-02', and it has no properties 'tau_k'.
+
+   4. The medication node with ID '205923' has an edge connected to the ingredient node 'oxycodone'. This edge is of type HAS_INGREDIENT, and it also has a property 'tau_o' equal to 1 and 'is_error' as '1'.
+
+   5. The patient node with ID 'cae10920-f977-48b4-a0d3-4d70ad561fd1' has an edge connected to the ingredient node 'oxycodone'. This edge does not have any error, but it is not specified whether the patient is allergic or not.
+
+   6. The patient node with ID 'cae10920-f977-48b4-a0d3-4d70ad561fd1' also has an edge connected to the medication node '205923'. This edge is of type TAKES_MEDICATION, and it specifies that the patient started taking this medication on '2007-03-16T23:35:03Z', but the stop date is not specified.
+---
+
+OUTPUT FORMAT:
+
+Provide suggested repairs in the following structured format:
+
+<repairs> {op_code} | {target} | {details} </repairs>
+
+where:
+- {op_code} is one of (`ADD_NODE`, `ADD_EDGE`, `DEL_EDGE`, `UPD_NODE`, `UPD_EDGE`)
+- {target} specifies the affected node or relationship variable
+- {details} contains relevant property changes (key-value) or `-` if none
+
+Do NOT add explanations beyond the descriptions in the output.
+
+
+EXAMPLE OUTPUT #1: (e.g., if the allergy information is incorrect)
+<repairs>
+DEL_EDGE | [rm] | -
+</repairs>
+
+EXAMPLE OUTPUT #2: (e.g., if the ingredient information is incorrect)
+<repairs>
+DEL_EDGE | [rc] | -
+</repairs>

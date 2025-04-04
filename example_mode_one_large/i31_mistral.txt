@@ -1,0 +1,14 @@
+ <repairs>
+    DEL_EDGE | (rm) | -
+    UPD_NODE | (i:Ingredient{id:'oxycodone'}) | allergenic='true'
+    ADD_EDGE | (m:Medication{description:'1 ML Epogen 4000 UNT/ML Injection'})-[:HAS_INGREDIENT]->(newI:Ingredient) | id=oxycodone, allergenic='false'
+    DEL_EDGE | (p)-[ra:ALLERGIC_TO]->(i)
+    ADD_EDGE | (p)-[ra:ALLERGIC_TO]->(newI) | -
+    </repairs>
+
+Explanation:
+- Remove the existing relationship between Patient and Medicine (DEL_EDGE on rm).
+- Update the property of the Oxycodone ingredient to be allergenic (UPD_NODE on i).
+- Add a new non-allergenic Ingredient for the Medicine (ADD_EDGE from Medicine to newI, and ADD_NODE for newI).
+- Remove the existing allergy relationship between Patient and Oxycodone (DEL_EDGE on ra).
+- Add a new allergy relationship between Patient and the non-allergenic Ingredient (ADD_EDGE on ra).

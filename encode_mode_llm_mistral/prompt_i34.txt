@@ -1,0 +1,38 @@
+Based on the following description of an inconsistency
+suggest graph repairs to fix it:
+---
+
+        MATCH (p:Patient)-[rm:TAKES_MEDICATION]->(m:Medication)-[rc:HAS_INGREDIENT]->(i:Ingredient),
+            (p)-[ra:ALLERGIC_TO]->(i)
+        RETURN *
+        1. There is a node with the ID '4:e00e4730-b338-4d2b-b715-75b0e15ece93' and label 'Ingredient', which has the property 'tau_o': 1 and an additional property 'id' with the value 'oxycodone'.
+  2. There is another node with the same ID '4:e00e4730-b338-4d2b-b715-75b0e15ece93' and label 'Medication', which has the properties 'code': '205923', 'tau_o': 1, 'description': '1 ML Epogen 4000 UNT/ML Injection'.
+  3. There is a node with the ID 'cae10920-f977-48b4-a0d3-4d70ad561fd1' and label 'Patient', which has properties such as 'address': '1081 Orn Street', 'birthdate': '1913-05-30', 'last': 'Brekke496', 'first': 'Logan497', 'tau_o': 0, 'deathdate': '2009-05-02'.
+  4. There is an edge connecting the node with ID '4:e00e4730-b338-4d2b-b715-75b0e15ece93' and label 'Ingredient' to the node with ID '4:e00e4730-b338-4d2b-b715-75b0e15ece93' and label 'Medication', with the type_: HAS_INGREDIENT, properties including 'tau_o': 1 and 'is_error': '1'.
+  5. There is an edge connecting the node with ID '4:e00e4730-b338-4d2b-b715-75b0e15ece93' and label 'Patient' to the node with ID '4:e00e4730-b338-4d2b-b715-75b0e15ece93' and label 'Ingredient', with the key: 5:e00e4730-b338-4d2b-b715-75b0e15ece93:970, type_: ALLERGIC_TO, and properties including 'tau_o': 0 and 'is_error': '0'.
+  6. There is an edge connecting the node with ID '4:e00e4730-b338-4d2b-b715-75b0e15ece93' and label 'Patient' to the node with ID '4:e00e4730-b338-4d2b-b715-75b0e15ece93' and label 'Medication', with the key: 5:e00e4730-b338-4d2b-b715-75b0e15ece93:52065, type_: TAKES_MEDICATION, and properties including 'tau_o': 0, 'start': '2002-05-11T23:35:03Z' and 'stop': '2002-05-11T23:35:03Z'.
+---
+
+OUTPUT FORMAT:
+
+Provide suggested repairs in the following structured format:
+
+<repairs> {op_code} | {target} | {details} </repairs>
+
+where:
+- {op_code} is one of (`ADD_NODE`, `ADD_EDGE`, `DEL_EDGE`, `UPD_NODE`, `UPD_EDGE`)
+- {target} specifies the affected node or relationship variable
+- {details} contains relevant property changes (key-value) or `-` if none
+
+Do NOT add explanations beyond the descriptions in the output.
+
+
+EXAMPLE OUTPUT #1: (e.g., if the allergy information is incorrect)
+<repairs>
+DEL_EDGE | [rm] | -
+</repairs>
+
+EXAMPLE OUTPUT #2: (e.g., if the ingredient information is incorrect)
+<repairs>
+DEL_EDGE | [rc] | -
+</repairs>

@@ -1,0 +1,39 @@
+Based on the following description of an inconsistency
+suggest graph repairs to fix it:
+---
+
+        MATCH (p:Patient)-[rm:TAKES_MEDICATION]->(m:Medication)-[rc:HAS_INGREDIENT]->(i:Ingredient),
+            (p)-[ra:ALLERGIC_TO]->(i)
+        RETURN *
+        The graph describes a network involving an ingredient, a medication, and a patient. The ingredient is identified as "mestranol" (Node ID: [6776]). It has a property `tau_o` set to 1.
+
+A medication named "Humulin 70/30 Injectable Suspension" (Node ID: [6786]) contains this ingredient "mestranol." This relationship is represented by an edge labeled as HAS_INGREDIENT, with properties indicating `tau_o` is 1 and `is_error` is '1'. The key for this edge is [51991].
+
+A patient named Earle679 Frami345 (Node ID: [6408]) has specific details such as a birthdate of May 7, 1917, an address at "208 Kilback Center Unit 20," and a death date on January 23, 2018. The patient is allergic to the ingredient "mestranol." This relationship is represented by an edge labeled ALLERGIC_TO with properties `tau_o` set to 0 and `is_error` as '0'. The key for this edge is [983].
+
+Additionally, the same patient takes the medication "Humulin 70/30 Injectable Suspension" from July 18, 1994, to October 10, 1994. This relationship is represented by an edge labeled TAKES_MEDICATION with properties `tau_o` set to 0 and a key of [73].
+---
+
+OUTPUT FORMAT:
+
+Provide suggested repairs in the following structured format:
+
+<repairs> {op_code} | {target} | {details} </repairs>
+
+where:
+- {op_code} is one of (`ADD_NODE`, `ADD_EDGE`, `DEL_EDGE`, `UPD_NODE`, `UPD_EDGE`)
+- {target} specifies the affected node or relationship variable
+- {details} contains relevant property changes (key-value) or `-` if none
+
+Do NOT add explanations beyond the descriptions in the output.
+
+
+EXAMPLE OUTPUT #1: (e.g., if the allergy information is incorrect)
+<repairs>
+DEL_EDGE | [rm] | -
+</repairs>
+
+EXAMPLE OUTPUT #2: (e.g., if the ingredient information is incorrect)
+<repairs>
+DEL_EDGE | [rc] | -
+</repairs>

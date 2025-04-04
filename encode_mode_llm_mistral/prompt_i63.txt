@@ -1,0 +1,43 @@
+Based on the following description of an inconsistency
+suggest graph repairs to fix it:
+---
+
+        MATCH (p:Patient)-[rm:TAKES_MEDICATION]->(m:Medication)-[rc:HAS_INGREDIENT]->(i:Ingredient),
+            (p)-[ra:ALLERGIC_TO]->(i)
+        RETURN *
+        1. There is a node labeled as 'Ingredient' with the ID 'ferrous sulfate'. It has a property 'tau_o' set to 1.
+
+   2. There is another node labeled as 'Medication', with the code '860975' and description "24 HR Glucophage 500 MG Extended Release Oral Tablet". This node also has a property 'tau_o' set to 1.
+
+   3. There is a node labeled as 'Patient', with the ID '3f336702-bf73-4fc8-bd59-3ba77fd65d0d'. This patient's first name is Sanford861, last name is Fritsch593, birthdate is June 22, 1923, and address is '935 Rempel Trail'.
+
+   4. The ingredient node (ferrous sulfate) has an edge connected to the medication node with key 5:e00e4730-b338-4d2b-b715-75b0e15ece93:51961. The type of this edge is 'HAS_INGREDIENT' and it has a property 'tau_o' set to 1, and an error flag 'is_error' set to '1'.
+
+   5. The patient node (Sanford861 Fritsch593) has an edge connected to the ingredient node with key 5:e00e4730-b338-4d2b-b715-75b0e15ece93:980. The type of this edge is 'ALLERGIC_TO', and it has properties 'start' and 'stop' set to empty strings, a property 'tau_o' set to 0, and an error flag 'is_error' set to '0'.
+
+   6. The patient node also has an edge connected to the medication node with key 5:e00e4730-b338-4d2b-b715-75b0e15ece93:475. The type of this edge is 'TAKES_MEDICATION', and it has properties 'start' and 'stop' set to June 28, 1985 and August 30, 1985 respectively, a property 'tau_o' set to 0, and an error flag 'is_error' set to '0'.
+---
+
+OUTPUT FORMAT:
+
+Provide suggested repairs in the following structured format:
+
+<repairs> {op_code} | {target} | {details} </repairs>
+
+where:
+- {op_code} is one of (`ADD_NODE`, `ADD_EDGE`, `DEL_EDGE`, `UPD_NODE`, `UPD_EDGE`)
+- {target} specifies the affected node or relationship variable
+- {details} contains relevant property changes (key-value) or `-` if none
+
+Do NOT add explanations beyond the descriptions in the output.
+
+
+EXAMPLE OUTPUT #1: (e.g., if the allergy information is incorrect)
+<repairs>
+DEL_EDGE | [rm] | -
+</repairs>
+
+EXAMPLE OUTPUT #2: (e.g., if the ingredient information is incorrect)
+<repairs>
+DEL_EDGE | [rc] | -
+</repairs>

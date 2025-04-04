@@ -1,0 +1,35 @@
+Based on the following description of an inconsistency
+suggest graph repairs to fix it:
+---
+
+        MATCH (p:Patient)-[rm:TAKES_MEDICATION]->(m:Medication)-[rc:HAS_INGREDIENT]->(i:Ingredient),
+            (p)-[ra:ALLERGIC_TO]->(i)
+        RETURN *
+        The graph contains three nodes and three edges. Node [4:e00e4730-b338-4d2b-b715-75b0e15ece93:6691] is labeled as an "Ingredient" with the properties of having a tau_o value of 1 and being identified as 'ferrous sulfate'. Node [4:e00e4730-b338-4d2b-b715-75b0e15ece93:6750] is labeled as a "Medication" with a code '860975', a tau_o value of 1, and described as '24 HR Glucophage 500 MG Extended Release Oral Tablet'. Node [4:e00e4730-b338-4d2b-b715-75b0e15ece93:5589] is labeled as a "Patient" with the address '690 Stark Vista', birthdate '1951-01-06', tau_k as an empty list, last name 'Fritsch593', tau_o value of 0, no death date, id 'cecb7ece-fb70-4a7f-b51d-6e8dd1506ad9', and first name 'Isiah14'.
+
+There are three edges in the graph. The edge from [4:e00e4730-b338-4d2b-b715-75b0e15ece93:6750] to [4:e00e4730-b338-4d2b-b715-75b0e15ece93:6691] has a key of 5:e00e4730-b338-4d2b-b715-75b0e15ece93:51961, is of type HAS_INGREDIENT, and has properties tau_o value of 1 and an error flag '1'. The edge from [4:e00e4730-b338-4d2b-b715-75b0e15ece93:5589] to [4:e00e4730-b338-4d2b-b715-75b0e15ece93:6691] has a key of 5:e00e4730-b338-4d2b-b715-75b0e15ece93:993, is of type ALLERGIC_TO, and has properties with empty start and stop dates, tau_o value of 0, and an error flag '0'. The edge from [4:e00e4730-b338-4d2b-b715-75b0e15ece93:5589] to [4:e00e4730-b338-4d2b-b715-75b0e15ece93:6750] has a key of 5:e00e4730-b338-4d2b-b715-75b0e15ece93:701, is of type TAKES_MEDICATION, and has properties with start date '2007-04-07T06:11:10Z', stop date '2007-04-28T06:11:10Z', and tau_o value of 0.
+---
+
+OUTPUT FORMAT:
+
+Provide suggested repairs in the following structured format:
+
+<repairs> {op_code} | {target} | {details} </repairs>
+
+where:
+- {op_code} is one of (`ADD_NODE`, `ADD_EDGE`, `DEL_EDGE`, `UPD_NODE`, `UPD_EDGE`)
+- {target} specifies the affected node or relationship variable
+- {details} contains relevant property changes (key-value) or `-` if none
+
+Do NOT add explanations beyond the descriptions in the output.
+
+
+EXAMPLE OUTPUT #1: (e.g., if the allergy information is incorrect)
+<repairs>
+DEL_EDGE | [rm] | -
+</repairs>
+
+EXAMPLE OUTPUT #2: (e.g., if the ingredient information is incorrect)
+<repairs>
+DEL_EDGE | [rc] | -
+</repairs>

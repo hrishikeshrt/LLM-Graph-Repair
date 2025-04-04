@@ -1,0 +1,39 @@
+Based on the following description of an inconsistency
+suggest graph repairs to fix it:
+---
+
+        MATCH (p:Patient)-[rm:TAKES_MEDICATION]->(m:Medication)-[rc:HAS_INGREDIENT]->(i:Ingredient),
+            (p)-[ra:ALLERGIC_TO]->(i)
+        RETURN *
+        The graph describes a network involving an ingredient, medication, and a patient. The node labeled as "Ingredient" (ID: 4:e00e4730-b338-4d2b-b715-75b0e15ece93:6757) represents oxycodone. There is another node labeled as "Medication" (ID: 4:e00e4730-b338-4d2b-b715-75b0e15ece93:6846), which describes a medication called Epogen, specifically 1 mL of Epogen with a concentration of 4000 UNT/ML Injection and has the code '205923'. The third node is labeled as "Patient" (ID: 4:e00e4730-b338-4d2b-b715-75b0e15ece93:5840), representing Sanford Fritsch, born on June 22, 1923, residing at 935 Rempel Trail.
+
+There are three edges in the graph. The first edge (ID: 5:e00e4730-b338-4d2b-b715-75b0e15ece93:52036) connects the medication node to the ingredient node with a relationship type of HAS_INGREDIENT, indicating that oxycodone is an ingredient in Epogen. This edge has a property 'is_error' set to '1', suggesting there might be an error associated with this connection.
+
+The second edge (ID: 5:e00e4730-b338-4d2b-b715-75b0e15ece93:985) connects the patient node to the ingredient node with a relationship type of ALLERGIC_TO, indicating that Sanford Fritsch is allergic to oxycodone. This edge has 'is_error' set to '0', implying no error in this information.
+
+The third edge (ID: 5:e00e4730-b338-4d2b-b715-75b0e15ece93:276) connects the patient node to the medication node with a relationship type of TAKES_MEDICATION. It indicates that Sanford Fritsch took Epogen, starting and stopping on July 26, 2012, at 09:55:43 Zulu time. This edge also has 'is_error' set to '0', indicating no error in this information.
+---
+
+OUTPUT FORMAT:
+
+Provide suggested repairs in the following structured format:
+
+<repairs> {op_code} | {target} | {details} </repairs>
+
+where:
+- {op_code} is one of (`ADD_NODE`, `ADD_EDGE`, `DEL_EDGE`, `UPD_NODE`, `UPD_EDGE`)
+- {target} specifies the affected node or relationship variable
+- {details} contains relevant property changes (key-value) or `-` if none
+
+Do NOT add explanations beyond the descriptions in the output.
+
+
+EXAMPLE OUTPUT #1: (e.g., if the allergy information is incorrect)
+<repairs>
+DEL_EDGE | [rm] | -
+</repairs>
+
+EXAMPLE OUTPUT #2: (e.g., if the ingredient information is incorrect)
+<repairs>
+DEL_EDGE | [rc] | -
+</repairs>

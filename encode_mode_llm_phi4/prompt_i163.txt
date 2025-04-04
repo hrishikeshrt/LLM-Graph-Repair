@@ -1,0 +1,39 @@
+Based on the following description of an inconsistency
+suggest graph repairs to fix it:
+---
+
+        MATCH (p:Patient)-[rm:TAKES_MEDICATION]->(m:Medication)-[rc:HAS_INGREDIENT]->(i:Ingredient),
+            (p)-[ra:ALLERGIC_TO]->(i)
+        RETURN *
+        The graph describes a scenario involving an ingredient, medication, and a patient. The ingredient is mestranol, identified by ID [4:e00e4730-b338-4d2b-b715-75b0e15ece93:6776], which has the property tau_o set to 1.
+
+Humulin 70/30 Injectable Suspension is a medication with code '106892', described as such and also having tau_o set to 1. It contains mestranol as an ingredient, indicated by the edge [4:e00e4730-b338-4d2b-b715-75b0e15ece93:6786 -> 4:e00e4730-b338-4d2b-b715-75b0e15ece93:6776] with type HAS_INGREDIENT and property is_error set to '1'.
+
+The patient, Kendal125 Bartoletti50, resides at 817 Schinner Pathway. Born on January 13, 1974, the patient has tau_o set to 0 and no recorded death date. The patient is allergic to mestranol, as shown by the edge [4:e00e4730-b338-4d2b-b715-75b0e15ece93:5979 -> 4:e00e4730-b338-4d2b-b715-75b0e15ece93:6776] with type ALLERGIC_TO and is_error set to '0'.
+
+Additionally, the patient takes Humulin 70/30 Injectable Suspension from November 27, 2016, to December 18, 2016, as indicated by the edge [4:e00e4730-b338-4d2b-b715-75b0e15ece93:5979 -> 4:e00e4730-b338-4d2b-b715-75b0e15ece93:6786] with type TAKES_MEDICATION and tau_o set to 0.
+---
+
+OUTPUT FORMAT:
+
+Provide suggested repairs in the following structured format:
+
+<repairs> {op_code} | {target} | {details} </repairs>
+
+where:
+- {op_code} is one of (`ADD_NODE`, `ADD_EDGE`, `DEL_EDGE`, `UPD_NODE`, `UPD_EDGE`)
+- {target} specifies the affected node or relationship variable
+- {details} contains relevant property changes (key-value) or `-` if none
+
+Do NOT add explanations beyond the descriptions in the output.
+
+
+EXAMPLE OUTPUT #1: (e.g., if the allergy information is incorrect)
+<repairs>
+DEL_EDGE | [rm] | -
+</repairs>
+
+EXAMPLE OUTPUT #2: (e.g., if the ingredient information is incorrect)
+<repairs>
+DEL_EDGE | [rc] | -
+</repairs>

@@ -1,0 +1,41 @@
+Based on the following description of an inconsistency
+suggest graph repairs to fix it:
+---
+
+        MATCH (p:Patient)-[rm:TAKES_MEDICATION]->(m:Medication)-[rc:HAS_INGREDIENT]->(i:Ingredient),
+            (p)-[ra:ALLERGIC_TO]->(i)
+        RETURN *
+        The graph describes a network involving an ingredient, medication, and a patient. The node representing the ingredient is identified by its ID 'mestranol' with a property `tau_o` of 1. Another node represents the medication 'Humulin 70/30 Injectable Suspension', which has a code '106892' and also a `tau_o` value of 1.
+
+There are connections between these nodes indicating various relationships:
+
+1. The medication 'Humulin 70/30 Injectable Suspension' contains the ingredient 'mestranol'. This relationship is marked by an edge labeled HAS_INGREDIENT, with properties including `tau_o` of 1 and a flag `is_error` set to '1'.
+
+2. A patient named Logan Brekke, residing at 1081 Orn Street, has an allergy to the ingredient 'mestranol'. The patient's birthdate is May 30, 1913, and they passed away on May 2, 2009. This relationship is represented by an edge labeled ALLERGIC_TO with properties `tau_o` of 0 and no error (`is_error` set to '0').
+
+3. Logan Brekke took the medication 'Humulin 70/30 Injectable Suspension' from September 22, 1984, at 23:35:03 UTC until October 12, 1984, at 23:35:03 UTC. This is indicated by an edge labeled TAKES_MEDICATION with a `tau_o` of 0.
+---
+
+OUTPUT FORMAT:
+
+Provide suggested repairs in the following structured format:
+
+<repairs> {op_code} | {target} | {details} </repairs>
+
+where:
+- {op_code} is one of (`ADD_NODE`, `ADD_EDGE`, `DEL_EDGE`, `UPD_NODE`, `UPD_EDGE`)
+- {target} specifies the affected node or relationship variable
+- {details} contains relevant property changes (key-value) or `-` if none
+
+Do NOT add explanations beyond the descriptions in the output.
+
+
+EXAMPLE OUTPUT #1: (e.g., if the allergy information is incorrect)
+<repairs>
+DEL_EDGE | [rm] | -
+</repairs>
+
+EXAMPLE OUTPUT #2: (e.g., if the ingredient information is incorrect)
+<repairs>
+DEL_EDGE | [rc] | -
+</repairs>

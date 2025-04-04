@@ -1,0 +1,43 @@
+Based on the following description of an inconsistency
+suggest graph repairs to fix it:
+---
+
+        MATCH (p:Patient)-[rm:TAKES_MEDICATION]->(m:Medication)-[rc:HAS_INGREDIENT]->(i:Ingredient),
+            (p)-[ra:ALLERGIC_TO]->(i)
+        RETURN *
+         Node with ID 'olmesartan' (4:e00e4730-b338-4d2b-b715-75b0e15ece93:6660) is labeled as an Ingredient, and it has a property 'tau_o' with value 1 and another property 'id' with the value 'olmesartan'.
+
+   Node with ID 'Amlodipine 5 MG / HCTZ 12.5 MG / Olmesartan medoxomil 20 MG Oral Tablet [Tribenzor]' (4:e00e4730-b338-4d2b-b715-75b0e15ece93:6703) is labeled as a Medication. It has properties 'code' with value '999967', 'description' with the given string, 'tau_o' with value 1, and another property 'id' without a specified value.
+
+   Node with ID '2c71dd97-7085-416a-aa07-d675bbe3adf2' (4:e00e4730-b338-4d2b-b715-75b0e15ece93:6400) is labeled as a Patient. It has properties 'address' with the value '531 Collier Wynd', 'birthdate' with the value '1941-02-14', an empty list for 'tau_k', an empty string for 'deathdate', and another property 'id' with the value '2c71dd97-7085-416a-aa07-d675bbe3adf2'. The properties 'first' and 'last' have values 'Samatha845' and 'Mueller846', respectively.
+
+   There is an Edge (4:e00e4730-b338-4d2b-b715-75b0e15ece93:6703 -> 4:e00e4730-b338-4d2b-b715-75b0e15ece93:6660) with key 5:e00e4730-b338-4d2b-b715-75b0e15ece93:51923, type_ HAS_INGREDIENT, properties 'tau_o' with value 1, and 'is_error' with the value '0'. This implies that the Medication (Amlodipine 5 MG / HCTZ 12.5 MG / Olmesartan medoxomil 20 MG Oral Tablet [Tribenzor]) has the Ingredient 'olmesartan'.
+
+   There is an Edge (4:e00e4730-b338-4d2b-b715-75b0e15ece93:6400 -> 4:e00e4730-b338-4d2b-b715-75b0e15ece93:6660) with key 5:e00e4730-b338-4d2b-b715-75b0e15ece93:990, type_ ALLERGIC_TO, properties 'tau_o' with value 0, and 'is_error' with the value '1'. This suggests that the Patient (Samatha Mueller) might have an error in their allergy record for the Ingredient 'olmesartan'.
+
+   There is also an Edge (4:e00e4730-b338-4d2b-b715-75b0e15ece93:6400 -> 4:e00e4730-b338-4d2b-b715-75b0e15ece93:6703) with key 5:e00e4730-b338-4d2b-b715-75b0e15ece93:51924, type_ TAKES, properties 'tau_o' with value 1, and 'is_error' without a specified value. This indicates that the Patient (Samatha Mueller) takes the Medication (Amlodipine 5 MG / HCTZ 12.5 MG / Olmesartan medoxomil 20 MG Oral Tablet [Tribenzor]).
+---
+
+OUTPUT FORMAT:
+
+Provide suggested repairs in the following structured format:
+
+<repairs> {op_code} | {target} | {details} </repairs>
+
+where:
+- {op_code} is one of (`ADD_NODE`, `ADD_EDGE`, `DEL_EDGE`, `UPD_NODE`, `UPD_EDGE`)
+- {target} specifies the affected node or relationship variable
+- {details} contains relevant property changes (key-value) or `-` if none
+
+Do NOT add explanations beyond the descriptions in the output.
+
+
+EXAMPLE OUTPUT #1: (e.g., if the allergy information is incorrect)
+<repairs>
+DEL_EDGE | [rm] | -
+</repairs>
+
+EXAMPLE OUTPUT #2: (e.g., if the ingredient information is incorrect)
+<repairs>
+DEL_EDGE | [rc] | -
+</repairs>

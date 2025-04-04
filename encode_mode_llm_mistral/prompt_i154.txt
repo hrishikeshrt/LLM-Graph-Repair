@@ -1,0 +1,39 @@
+Based on the following description of an inconsistency
+suggest graph repairs to fix it:
+---
+
+        MATCH (p:Patient)-[rm:TAKES_MEDICATION]->(m:Medication)-[rc:HAS_INGREDIENT]->(i:Ingredient),
+            (p)-[ra:ALLERGIC_TO]->(i)
+        RETURN *
+        1. The node with ID 'cecb7ece-fb70-4a7f-b51d-6e8dd1506ad9' is a patient named Isiah14, born on January 6th, 1951, living at 690 Stark Vista.
+  2. Another node with the same ID 'cecb7ece-fb70-4a7f-b51d-6e8dd1506ad9' has a label 'Patient'.
+  3. There is a node labeled as an 'Ingredient' (ID: 'ferrous sulfate') with the property 'tau_o': 1.
+  4. Another node labeled as a 'Medication' (code: '860975', description: '24 HR Glucophage 500 MG Extended Release Oral Tablet') also has the property 'tau_o': 1.
+  5. The patient 'cecb7ece-fb70-4a7f-b51d-6e8dd1506ad9' has the ingredient 'ferrous sulfate'. This relationship is represented by an edge with type 'HAS_INGREDIENT'.
+  6. The patient 'cecb7ece-fb70-4a7f-b51d-6e8dd1506ad9' is allergic to something, but the specific allergen is not specified in this graph (represented by an edge with type 'ALLERGIC_TO').
+  7. The patient 'cecb7ece-fb70-4a7f-b51d-6e8dd1506ad9' has been taking the medication labeled as '24 HR Glucophage 500 MG Extended Release Oral Tablet' from October 17th, 1998 to March 13th, 1999 (represented by an edge with type 'TAKES_MEDICATION').
+---
+
+OUTPUT FORMAT:
+
+Provide suggested repairs in the following structured format:
+
+<repairs> {op_code} | {target} | {details} </repairs>
+
+where:
+- {op_code} is one of (`ADD_NODE`, `ADD_EDGE`, `DEL_EDGE`, `UPD_NODE`, `UPD_EDGE`)
+- {target} specifies the affected node or relationship variable
+- {details} contains relevant property changes (key-value) or `-` if none
+
+Do NOT add explanations beyond the descriptions in the output.
+
+
+EXAMPLE OUTPUT #1: (e.g., if the allergy information is incorrect)
+<repairs>
+DEL_EDGE | [rm] | -
+</repairs>
+
+EXAMPLE OUTPUT #2: (e.g., if the ingredient information is incorrect)
+<repairs>
+DEL_EDGE | [rc] | -
+</repairs>

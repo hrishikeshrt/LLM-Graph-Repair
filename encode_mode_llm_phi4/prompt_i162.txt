@@ -1,0 +1,37 @@
+Based on the following description of an inconsistency
+suggest graph repairs to fix it:
+---
+
+        MATCH (p:Patient)-[rm:TAKES_MEDICATION]->(m:Medication)-[rc:HAS_INGREDIENT]->(i:Ingredient),
+            (p)-[ra:ALLERGIC_TO]->(i)
+        RETURN *
+        Ferrous sulfate is an ingredient (Node ID: [6691]) with a property tau_o of 1. A medication called "24 HR Glucophage 500 MG Extended Release Oral Tablet" has the code '860975', a description as stated, and also has a property tau_o of 1 (Node ID: [6750]). Isiah14 Fritsch593 is a patient living at 690 Stark Vista with a birthdate on January 6, 1951. This patient does not have any recorded death date or tau_k properties and has an id of 'cecb7ece-fb70-4a7f-b51d-6e8dd1506ad9' (Node ID: [5589]).
+
+The medication "24 HR Glucophage 500 MG Extended Release Oral Tablet" contains ferrous sulfate as an ingredient, with a property tau_o of 1 and is marked with an error flag (Edge Key: [51961]). Isiah14 Fritsch593 is allergic to ferrous sulfate, without specified start or stop dates for the allergy, and has no errors associated with this relationship (Edge Key: [993]).
+
+Isiah14 Fritsch593 takes the medication "24 HR Glucophage 500 MG Extended Release Oral Tablet" from August 14, 2004, at 06:11:10 AM to August 21, 2004, at 06:11:10 AM, with no errors noted in this relationship (Edge Key: [39]).
+---
+
+OUTPUT FORMAT:
+
+Provide suggested repairs in the following structured format:
+
+<repairs> {op_code} | {target} | {details} </repairs>
+
+where:
+- {op_code} is one of (`ADD_NODE`, `ADD_EDGE`, `DEL_EDGE`, `UPD_NODE`, `UPD_EDGE`)
+- {target} specifies the affected node or relationship variable
+- {details} contains relevant property changes (key-value) or `-` if none
+
+Do NOT add explanations beyond the descriptions in the output.
+
+
+EXAMPLE OUTPUT #1: (e.g., if the allergy information is incorrect)
+<repairs>
+DEL_EDGE | [rm] | -
+</repairs>
+
+EXAMPLE OUTPUT #2: (e.g., if the ingredient information is incorrect)
+<repairs>
+DEL_EDGE | [rc] | -
+</repairs>

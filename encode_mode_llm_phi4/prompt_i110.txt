@@ -1,0 +1,37 @@
+Based on the following description of an inconsistency
+suggest graph repairs to fix it:
+---
+
+        MATCH (p:Patient)-[rm:TAKES_MEDICATION]->(m:Medication)-[rc:HAS_INGREDIENT]->(i:Ingredient),
+            (p)-[ra:ALLERGIC_TO]->(i)
+        RETURN *
+        The graph describes a network involving an ingredient, a medication, and a patient. The ingredient is oxycodone, identified by its ID (e00e4730-b338-4d2b-b715-75b0e15ece93:6757), which has a property `tau_o` set to 1. There is a medication described as "1 ML Epogen 4000 UNT/ML Injection" with an ID of (e00e4730-b338-4d2b-b715-75b0e15ece93:6846). This medication has a code '205923', `tau_o` set to 1, and is connected to oxycodone by the relationship HAS_INGREDIENT, which also has an error status indicated by `is_error` being '1'.
+
+The patient in this graph is identified as Sanford861 Fritsch593 with an ID of (e00e4730-b338-4d2b-b715-75b0e15ece93:5840). The patient's details include a birthdate on June 22, 1923, and an address at '935 Rempel Trail'. The patient is allergic to oxycodone, as indicated by the ALLERGIC_TO relationship between the patient and oxycodone, with no error status (`is_error` being '0').
+
+Additionally, the patient takes the medication Epogen 4000 UNT/ML Injection. This relationship (TAKES_MEDICATION) has a start and stop date of March 27, 2018, at 09:55:43Z, with `tau_o` set to 0 and no error status (`is_error` being '0').
+---
+
+OUTPUT FORMAT:
+
+Provide suggested repairs in the following structured format:
+
+<repairs> {op_code} | {target} | {details} </repairs>
+
+where:
+- {op_code} is one of (`ADD_NODE`, `ADD_EDGE`, `DEL_EDGE`, `UPD_NODE`, `UPD_EDGE`)
+- {target} specifies the affected node or relationship variable
+- {details} contains relevant property changes (key-value) or `-` if none
+
+Do NOT add explanations beyond the descriptions in the output.
+
+
+EXAMPLE OUTPUT #1: (e.g., if the allergy information is incorrect)
+<repairs>
+DEL_EDGE | [rm] | -
+</repairs>
+
+EXAMPLE OUTPUT #2: (e.g., if the ingredient information is incorrect)
+<repairs>
+DEL_EDGE | [rc] | -
+</repairs>

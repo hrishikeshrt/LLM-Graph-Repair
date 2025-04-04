@@ -1,0 +1,33 @@
+Based on the following description of an inconsistency
+suggest graph repairs to fix it:
+---
+
+        MATCH (p:Patient)-[rm:TAKES_MEDICATION]->(m:Medication)-[rc:HAS_INGREDIENT]->(i:Ingredient),
+            (p)-[ra:ALLERGIC_TO]->(i)
+        RETURN *
+        The graph represents a network involving medications and patients. There is an ingredient labeled "metformin" (ID: e00e4730-b338-4d2b-b715-75b0e15ece93:6751) associated with the medication "24 HR Glucophage 500 MG Extended Release Oral Tablet" (ID: e00e4730-b338-4d2b-b715-75b0e15ece93:6750), which has a code of '860975'. The patient, Teddy976 Cremin516 (ID: e00e4730-b338-4d2b-b715-75b0e15ece93:5947), resided at 795 Rogahn Parade Unit 42 and was born on May 23, 1942. This patient has an allergy to metformin, although this information is marked as erroneous. Additionally, Teddy976 Cremin516 took the medication "24 HR Glucophage" from June 18, 1994, at 20:06:53 Zulu time until July 16, 1994, at 20:06:53 Zulu time.
+---
+
+OUTPUT FORMAT:
+
+Provide suggested repairs in the following structured format:
+
+<repairs> {op_code} | {target} | {details} </repairs>
+
+where:
+- {op_code} is one of (`ADD_NODE`, `ADD_EDGE`, `DEL_EDGE`, `UPD_NODE`, `UPD_EDGE`)
+- {target} specifies the affected node or relationship variable
+- {details} contains relevant property changes (key-value) or `-` if none
+
+Do NOT add explanations beyond the descriptions in the output.
+
+
+EXAMPLE OUTPUT #1: (e.g., if the allergy information is incorrect)
+<repairs>
+DEL_EDGE | [rm] | -
+</repairs>
+
+EXAMPLE OUTPUT #2: (e.g., if the ingredient information is incorrect)
+<repairs>
+DEL_EDGE | [rc] | -
+</repairs>

@@ -1,0 +1,38 @@
+Based on the following description of an inconsistency
+suggest graph repairs to fix it:
+---
+
+        MATCH (p:Patient)-[rm:TAKES_MEDICATION]->(m:Medication)-[rc:HAS_INGREDIENT]->(i:Ingredient),
+            (p)-[ra:ALLERGIC_TO]->(i)
+        RETURN *
+        [Node 4:e00e4730-b338-4d2b-b715-75b0e15ece93:6655] naproxen is an ingredient.  [Node 4:e00e4730-b338-4d2b-b715-75b0e15ece93:6699] verapamil hydrochloride 40 MG Oral Tablet is a medication. [Node 4:e00e4730-b338-4d2b-b715-75b0e15ece93:6346]  is a patient with the id [49303b96-1de5-4365-9ff3-bf960aea755b]. [Node 4:e00e4730-b338-4d2b-b715-75b0e15ece93:6699] has the ingredient [Node 4:e00e4730-b338-4d2b-b715-75b0e15ece93:6655].  [Node 4:e00e4730-b338-4d2b-b715-75b0e15ece93:6346] is allergic to [Node 4:e00e4730-b338-4d2b-b715-75b0e15ece93:6655].  [Node 4:e00e4730-b338-4d2b-b715-75b0e15ece93:6346] takes [Node 4:e00e4730-b338-4d2b-b715-75b0e15ece93:6699].  
+
+
+
+
+
+---
+
+OUTPUT FORMAT:
+
+Provide suggested repairs in the following structured format:
+
+<repairs> {op_code} | {target} | {details} </repairs>
+
+where:
+- {op_code} is one of (`ADD_NODE`, `ADD_EDGE`, `DEL_EDGE`, `UPD_NODE`, `UPD_EDGE`)
+- {target} specifies the affected node or relationship variable
+- {details} contains relevant property changes (key-value) or `-` if none
+
+Do NOT add explanations beyond the descriptions in the output.
+
+
+EXAMPLE OUTPUT #1: (e.g., if the allergy information is incorrect)
+<repairs>
+DEL_EDGE | [ra] | -
+</repairs>
+
+EXAMPLE OUTPUT #2: (e.g., if the ingredient information is incorrect)
+<repairs>
+DEL_EDGE | [rc] | -
+</repairs>

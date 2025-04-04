@@ -1,0 +1,47 @@
+Based on the following description of an inconsistency
+suggest graph repairs to fix it:
+---
+
+        MATCH (p:Patient)-[rm:TAKES_MEDICATION]->(m:Medication)-[rc:HAS_INGREDIENT]->(i:Ingredient),
+            (p)-[ra:ALLERGIC_TO]->(i)
+        RETURN *
+         There are three nodes in this graph.
+
+   The first node represents an Ingredient (4:e00e4730-b338-4d2b-b715-75b0e15ece93:6696) with the ID 'exemestane'.
+
+   The second node represents a Medication (4:e00e4730-b338-4d2b-b715-75b0e15ece93:6694). Its code is '310798' and its description is 'HCTZ 25 MG Oral Tablet'.
+
+   The third node represents a Patient (4:e00e4730-b338-4d2b-b715-75b0e15ece93:6408). His first name is 'Earle679' and his last name is 'Frami345'. He was born on 1917-05-07 and died on 2018-01-23.
+
+   There are three edges connecting these nodes:
+
+   1. The first edge (4:e00e4730-b338-4d2b-b715-75b0e15ece93:6694 -> 4:e00e4730-b338-4d2b-b715-75b0e15ece93:6696) indicates that the Medication (HCTZ 25 MG Oral Tablet) has Ingredient 'exemestane'.
+
+   2. The second edge (4:e00e4730-b338-4d2b-b715-75b0e15ece93:6408 -> 4:e00e4730-b338-4d2b-b715-75b0e15ece93:6696) indicates that the Patient is allergic to the Ingredient 'exemestane'.
+
+   3. The third edge (4:e00e4730-b338-4d2b-b715-75b0e15ece93:6408 -> 4:e00e4730-b338-4d2b-b715-75b0e15ece93:6694) indicates that the Patient takes the Medication 'HCTZ 25 MG Oral Tablet'. He started taking it on 2016-09-26 and stopped on 2016-10-03.
+---
+
+OUTPUT FORMAT:
+
+Provide suggested repairs in the following structured format:
+
+<repairs> {op_code} | {target} | {details} </repairs>
+
+where:
+- {op_code} is one of (`ADD_NODE`, `ADD_EDGE`, `DEL_EDGE`, `UPD_NODE`, `UPD_EDGE`)
+- {target} specifies the affected node or relationship variable
+- {details} contains relevant property changes (key-value) or `-` if none
+
+Do NOT add explanations beyond the descriptions in the output.
+
+
+EXAMPLE OUTPUT #1: (e.g., if the allergy information is incorrect)
+<repairs>
+DEL_EDGE | [rm] | -
+</repairs>
+
+EXAMPLE OUTPUT #2: (e.g., if the ingredient information is incorrect)
+<repairs>
+DEL_EDGE | [rc] | -
+</repairs>

@@ -1,0 +1,16 @@
+ <repairs>
+    DEL_EDGE | (rc) | WHERE i.id = 'oxycodone'
+    UPD_NODE | (p) | -
+    ADD_EDGE | (p)-[ra:ALLERGIC_TO]->(i1:Ingredient) | id='another_ingredient'
+    DEL_EDGE | (rm) | WHERE m.description = '1 ML Epogen 4000 UNT/ML Injection' AND i.id = 'oxycodone'
+    ADD_NODE | (m2:Medicine) | description="medication-name" NOT ALLERGIC_TO<i1>
+    ADD_EDGE | (p)-[rm2:TAKES_MEDICATION]->(m2) | -
+   </repairs>
+
+Explanation:
+
+* Remove the existing relationship between the patient and oxycodone ingredient (DEL_EDGE | (rc))
+* Update the patient node with no changes (UPD_NODE | (p))
+* Add a new allergy to another ingredient for the patient (ADD_EDGE | (p)-[ra]->(i1))
+* Remove the existing relationship between the patient and the problematic medicine (DEL_EDGE | (rm))
+* Create a new medication node without the oxycodone ingredient and not allergic to the newly added allergy (ADD_NODE | (m2) and ADD_EDGE | (p)-[rm2]->(m2))

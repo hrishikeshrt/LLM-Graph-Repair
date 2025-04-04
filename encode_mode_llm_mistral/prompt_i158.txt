@@ -1,0 +1,38 @@
+Based on the following description of an inconsistency
+suggest graph repairs to fix it:
+---
+
+        MATCH (p:Patient)-[rm:TAKES_MEDICATION]->(m:Medication)-[rc:HAS_INGREDIENT]->(i:Ingredient),
+            (p)-[ra:ALLERGIC_TO]->(i)
+        RETURN *
+         Node with ID 'cecb7ece-fb70-4a7f-b51d-6e8dd1506ad9' (Isiah14) is a patient, born on 1951-01-06 and living at 690 Stark Vista.
+   Node with ID 'ferrous sulfate' (4:e00e4730-b338-4d2b-b715-75b0e15ece93:6691) is an ingredient, with tau_o of 1 and id 'ferrous sulfate'.
+   Node with ID '860975' (4:e00e4730-b338-4d2b-b715-75b0e15ece93:6750) is a medication, with code '860975', description '24 HR Glucophage 500 MG Extended Release Oral Tablet', tau_o of 1.
+   The ingredient 'ferrous sulfate' (4:e00e4730-b338-4d2b-b715-75b0e15ece93:6691) has an edge to the medication '860975' (4:e00e4730-b338-4d2b-b715-75b0e15ece93:6750), with type HAS_INGREDIENT and properties indicating it is an error.
+   The patient 'Isiah14' (4:e00e4730-b338-4d2b-b715-75b0e15ece93:5589) has an edge to the ingredient 'ferrous sulfate' (4:e00e4730-b338-4d2b-b715-75b0e15ece93:6691), with type ALLERGIC_TO and no properties indicating it is not an error.
+   The patient 'Isiah14' (4:e00e4730-b338-4d2b-b715-75b0e15ece93:5589) also has an edge to the medication '860975' (4:e00e4730-b338-4d2b-b715-75b0e15ece93:6750), with type TAKES_MEDICATION, indicating it started on 2018-05-05T06:11:10Z and stopped on 2018-06-02T06:11:10Z.
+---
+
+OUTPUT FORMAT:
+
+Provide suggested repairs in the following structured format:
+
+<repairs> {op_code} | {target} | {details} </repairs>
+
+where:
+- {op_code} is one of (`ADD_NODE`, `ADD_EDGE`, `DEL_EDGE`, `UPD_NODE`, `UPD_EDGE`)
+- {target} specifies the affected node or relationship variable
+- {details} contains relevant property changes (key-value) or `-` if none
+
+Do NOT add explanations beyond the descriptions in the output.
+
+
+EXAMPLE OUTPUT #1: (e.g., if the allergy information is incorrect)
+<repairs>
+DEL_EDGE | [rm] | -
+</repairs>
+
+EXAMPLE OUTPUT #2: (e.g., if the ingredient information is incorrect)
+<repairs>
+DEL_EDGE | [rc] | -
+</repairs>

@@ -1,0 +1,12 @@
+ <repairs> DEL_EDGE | (p:Patient)-[rm:TAKES_MEDICATION]->(m:Medication) </repairs>
+   <repairs> UPD_NODE | (p:Patient {first:'Samatha845'}) | {allergies: REMOVE olmesartan} </repairs>
+   <repairs> ADD_EDGE | (p:Patient)-[ra:ALLERGIC_TO]->(i:Ingredient) WHERE NOT (p)-[:ALLERGIC_TO]->(i) AND i.id='olmesartan' </repairs>
+   <repairs> UPD_NODE | (m:Medication {description:'Amlodipine 5 MG / HCTZ 12.5 MG / Olmesartan medoxomil 20 MG Oral Tablet [Tribenzor]'}) | {ingredients: REMOVE olmesartan} </repairs>
+   <repairs> ADD_EDGE | (m:Medication)-[rc:HAS_INGREDIENT]->(i:Ingredient) WHERE NOT (m)-[:HAS_INGREDIENT]->(i) AND i.id='olmesartan' </repairs>
+   <repairs> UPD_NODE | (i:Ingredient {id:'olmesartan'}) | {medicines: REMOVE 'Amlodipine 5 MG / HCTZ 12.5 MG / Olmesartan medoxomil 20 MG Oral Tablet [Tribenzor]'} </repairs>
+   <repairs> ADD_EDGE | (i:Ingredient)-[ra:ALTERNATIVE]->(a:Alternative) WHERE NOT (i)-[:ALTERNATIVE]->(a) AND NOT ((a)-[:HAS_INGREDIENT]->(b:Ingredient) AND b.id='olmesartan') </repairs>
+   <repairs> UPD_NODE | (p:Patient {first:'Samatha845'}) | {allergies: ADD a} WHERE NOT p.allergies CONTAINS a AND a = apoc.createNode('Alternative') AND (a)-[:HAS_INGREDIENT]->(b:Ingredient) AND b.id='olmesartan' </repairs>
+   <repairs> ADD_EDGE | (p:Patient)-[rm2:TAKES_MEDICATION]->(n:Medication) WHERE NOT (p)-[:TAKES_MEDICATION]->(n) AND n.description != 'Amlodipine 5 MG / HCTZ 12.5 MG / Olmesartan medoxomil 20 MG Oral Tablet [Tribenzor]' </repairs>
+   <repairs> UPD_NODE | (n:Medication {description:'...', ingredients:'...'}) | {ingredients: ADD olmesartan} </repairs>
+   <repairs> ADD_EDGE | (n:Medication)-[rc2:HAS_INGREDIENT]->(i:Ingredient) WHERE NOT (n)-[:HAS_INGREDIENT]->(i) AND i.id='olmesartan' </repairs>
+   <repairs> UPD_NODE | (i:Ingredient {id:'olmesartan'}) | {medicines: ADD n} WHERE NOT i.medicines CONTAINS n AND n = apoc.createNode('Medication', {description:'...', ingredients:'...'}) </repairs>

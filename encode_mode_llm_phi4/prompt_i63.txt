@@ -1,0 +1,41 @@
+Based on the following description of an inconsistency
+suggest graph repairs to fix it:
+---
+
+        MATCH (p:Patient)-[rm:TAKES_MEDICATION]->(m:Medication)-[rc:HAS_INGREDIENT]->(i:Ingredient),
+            (p)-[ra:ALLERGIC_TO]->(i)
+        RETURN *
+        The graph describes a network involving a patient, a medication, and an ingredient. Specifically:
+
+1. There is an ingredient identified as "ferrous sulfate" (Node ID: [4:e00e4730-b338-4d2b-b715-75b0e15ece93:6691]).
+
+2. A medication known as "24 HR Glucophage 500 MG Extended Release Oral Tablet," with a code of '860975' (Node ID: [4:e00e4730-b338-4d2b-b715-75b0e15ece93:6750]), contains this ingredient, indicated by the edge labeled HAS_INGREDIENT. This relationship has an error flag set to '1'.
+
+3. A patient named Sanford861 Fritsch593 (Node ID: [4:e00e4730-b338-4d2b-b715-75b0e15ece93:5840]) lives at 935 Rempel Trail and was born on June 22, 1923. The patient is allergic to the ingredient ferrous sulfate, as shown by an edge labeled ALLERGIC_TO with no error.
+
+4. Additionally, this patient took the medication "24 HR Glucophage" from June 28, 1985, until August 30, 1985, indicated by a TAKES_MEDICATION edge without any errors.
+---
+
+OUTPUT FORMAT:
+
+Provide suggested repairs in the following structured format:
+
+<repairs> {op_code} | {target} | {details} </repairs>
+
+where:
+- {op_code} is one of (`ADD_NODE`, `ADD_EDGE`, `DEL_EDGE`, `UPD_NODE`, `UPD_EDGE`)
+- {target} specifies the affected node or relationship variable
+- {details} contains relevant property changes (key-value) or `-` if none
+
+Do NOT add explanations beyond the descriptions in the output.
+
+
+EXAMPLE OUTPUT #1: (e.g., if the allergy information is incorrect)
+<repairs>
+DEL_EDGE | [rm] | -
+</repairs>
+
+EXAMPLE OUTPUT #2: (e.g., if the ingredient information is incorrect)
+<repairs>
+DEL_EDGE | [rc] | -
+</repairs>

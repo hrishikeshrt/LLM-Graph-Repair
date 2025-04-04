@@ -1,0 +1,45 @@
+Based on the following description of an inconsistency
+suggest graph repairs to fix it:
+---
+
+        MATCH (p:Patient)-[rm:TAKES_MEDICATION]->(m:Medication)-[rc:HAS_INGREDIENT]->(i:Ingredient),
+            (p)-[ra:ALLERGIC_TO]->(i)
+        RETURN *
+        The graph consists of three nodes and three edges. Node (4:e00e4730-b338-4d2b-b715-75b0e15ece93:6691) represents an ingredient labeled as "Ingredient," specifically identified as ferrous sulfate, with a property 'tau_o' set to 1.
+
+Node (4:e00e4730-b338-4d2b-b715-75b0e15ece93:6750) is labeled as "Medication" and describes a medication known as "24 HR Glucophage 500 MG Extended Release Oral Tablet," with properties including a code '860975' and 'tau_o' set to 1.
+
+Node (4:e00e4730-b338-4d2b-b715-75b0e15ece93:5996) represents a patient labeled as "Patient" named Marcellus Lemke830, born on May 23, 1942. The patient's address is 170 Kerluke Extension Suite 51, and the property 'tau_o' is set to 0.
+
+There are three edges connecting these nodes:
+
+1. An edge from node (4:e00e4730-b338-4d2b-b715-75b0e15ece93:6750) to node (4:e00e4730-b338-4d2b-b715-75b0e15ece93:6691), indicating that the medication contains ferrous sulfate as an ingredient. This edge has a type 'HAS_INGREDIENT' and properties including 'tau_o' set to 1, with 'is_error' marked as '1'.
+
+2. An edge from node (4:e00e4730-b338-4d2b-b715-75b0e15ece93:5996) to node (4:e00e4730-b338-4d2b-b715-75b0e15ece93:6691), indicating that the patient is allergic to ferrous sulfate. This edge has a type 'ALLERGIC_TO' with properties including 'tau_o' set to 0 and 'is_error' marked as '0'.
+
+3. An edge from node (4:e00e4730-b338-4d2b-b715-75b0e15ece93:5996) to node (4:e00e4730-b338-4d2b-b715-75b0e15ece93:6750), indicating that the patient takes the medication "24 HR Glucophage 500 MG Extended Release Oral Tablet." This edge has a type 'TAKES_MEDICATION' with properties including start and stop dates for taking the medication, 'tau_o' set to 0.
+---
+
+OUTPUT FORMAT:
+
+Provide suggested repairs in the following structured format:
+
+<repairs> {op_code} | {target} | {details} </repairs>
+
+where:
+- {op_code} is one of (`ADD_NODE`, `ADD_EDGE`, `DEL_EDGE`, `UPD_NODE`, `UPD_EDGE`)
+- {target} specifies the affected node or relationship variable
+- {details} contains relevant property changes (key-value) or `-` if none
+
+Do NOT add explanations beyond the descriptions in the output.
+
+
+EXAMPLE OUTPUT #1: (e.g., if the allergy information is incorrect)
+<repairs>
+DEL_EDGE | [rm] | -
+</repairs>
+
+EXAMPLE OUTPUT #2: (e.g., if the ingredient information is incorrect)
+<repairs>
+DEL_EDGE | [rc] | -
+</repairs>

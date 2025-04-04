@@ -1,0 +1,38 @@
+Based on the following description of an inconsistency
+suggest graph repairs to fix it:
+---
+
+        MATCH (p:Patient)-[rm:TAKES_MEDICATION]->(m:Medication)-[rc:HAS_INGREDIENT]->(i:Ingredient),
+            (p)-[ra:ALLERGIC_TO]->(i)
+        RETURN *
+        1. There is a node labeled as 'Ingredient' with the ID 'oxycodone'.
+  2. There is another node labeled as 'Medication' with the code '205923' and description '1 ML Epogen 4000 UNT/ML Injection'.
+  3. A third node represents a 'Patient' identified by 'Sanford861' (first name) and 'Fritsch593' (last name), born on June 22, 1923, living at '935 Rempel Trail', and taking the medication with the code '205923'.
+  4. The ingredient 'oxycodone' has the medication with code '205923' as an ingredient.
+  5. The patient identified by 'Sanford861' and 'Fritsch593' is allergic to some unknown allergen (no specific allergy information provided).
+  6. The patient identified by 'Sanford861' and 'Fritsch593' takes the medication with code '205923'. The start date for taking this medication is January 13, 2020 at 9:55:43 AM (UTC), but there is no specified end date.
+---
+
+OUTPUT FORMAT:
+
+Provide suggested repairs in the following structured format:
+
+<repairs> {op_code} | {target} | {details} </repairs>
+
+where:
+- {op_code} is one of (`ADD_NODE`, `ADD_EDGE`, `DEL_EDGE`, `UPD_NODE`, `UPD_EDGE`)
+- {target} specifies the affected node or relationship variable
+- {details} contains relevant property changes (key-value) or `-` if none
+
+Do NOT add explanations beyond the descriptions in the output.
+
+
+EXAMPLE OUTPUT #1: (e.g., if the allergy information is incorrect)
+<repairs>
+DEL_EDGE | [rm] | -
+</repairs>
+
+EXAMPLE OUTPUT #2: (e.g., if the ingredient information is incorrect)
+<repairs>
+DEL_EDGE | [rc] | -
+</repairs>

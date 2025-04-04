@@ -1,0 +1,39 @@
+Based on the following description of an inconsistency
+suggest graph repairs to fix it:
+---
+
+        MATCH (p:Patient)-[rm:TAKES_MEDICATION]->(m:Medication)-[rc:HAS_INGREDIENT]->(i:Ingredient),
+            (p)-[ra:ALLERGIC_TO]->(i)
+        RETURN *
+        This graph represents a patient's medical information. The nodes are labeled with unique identifiers and contain various properties such as birthdate, address, and medication details.
+
+Node [4:e00e4730-b338-4d2b-b715-75b0e15ece93:6776] is associated with the label "Ingredient" and contains information about a medication, including its code and description. Node [4:e00e4730-b338-4d2b-b715-75b0e15ece93:6786] has the label "Medication" and provides specific details about the medication, such as its code and description.
+
+Node [4:e00e4730-b338-4d2b-b715-75b0e15ece93:5979] is labeled with "Patient" and contains personal information about an individual, including their address, birthdate, and identification details.
+
+There are three edges connecting these nodes. The edge between Node [4:e00e4730-b338-4d2b-b715-75b0e15ece93:5979] and Node [4:e00e4730-b338-4d2b-b715-75b0e15ece93:6776] indicates that the patient is allergic to a certain ingredient in the medication. The edge between Node [4:e00e4730-b338-4d2b-b715-75b0e15ece93:5979] and Node [4:e00e4730-b338-4d2b-b715-75b0e15ece93:6786] shows that the patient takes a specific medication, with start and stop dates for the treatment.
+---
+
+OUTPUT FORMAT:
+
+Provide suggested repairs in the following structured format:
+
+<repairs> {op_code} | {target} | {details} </repairs>
+
+where:
+- {op_code} is one of (`ADD_NODE`, `ADD_EDGE`, `DEL_EDGE`, `UPD_NODE`, `UPD_EDGE`)
+- {target} specifies the affected node or relationship variable
+- {details} contains relevant property changes (key-value) or `-` if none
+
+Do NOT add explanations beyond the descriptions in the output.
+
+
+EXAMPLE OUTPUT #1: (e.g., if the allergy information is incorrect)
+<repairs>
+DEL_EDGE | [rm] | -
+</repairs>
+
+EXAMPLE OUTPUT #2: (e.g., if the ingredient information is incorrect)
+<repairs>
+DEL_EDGE | [rc] | -
+</repairs>

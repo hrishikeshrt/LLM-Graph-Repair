@@ -1,0 +1,39 @@
+Based on the following description of an inconsistency
+suggest graph repairs to fix it:
+---
+
+        MATCH (p:Patient)-[rm:TAKES_MEDICATION]->(m:Medication)-[rc:HAS_INGREDIENT]->(i:Ingredient),
+            (p)-[ra:ALLERGIC_TO]->(i)
+        RETURN *
+        There is an ingredient identified as exemestane (Node ID: 6696), which has a property `tau_o` of 1. A medication known as HCTZ 25 MG Oral Tablet, with code '310798' and described as such, also has a `tau_o` value of 1 (Node ID: 6694). There is a patient named Earle679 Frami345, born on May 7, 1917, who resided at 208 Kilback Center Unit 20. The patient passed away on January 23, 2018 and has an identifier (ID) of '3acf9313-1874-4dff-ab2a-3187516d92d6' with a `tau_k` property that is empty and a `tau_o` value of 0 (Node ID: 6408).
+
+The medication HCTZ 25 MG Oral Tablet contains the ingredient exemestane, as indicated by an edge labeled HAS_INGREDIENT. This relationship has a key '5:e00e4730-b338-4d2b-b715-75b0e15ece93:51917', and it is marked with `tau_o` of 1 and `is_error` set to '1'.
+
+The patient Earle679 Frami345 is allergic to exemestane, as shown by an edge labeled ALLERGIC_TO. This relationship has a key '5:e00e4730-b338-4d2b-b715-75b0e15ece93:969', with `tau_o` of 0 and `is_error` set to '0'.
+
+Additionally, the patient Earle679 Frami345 took the medication HCTZ 25 MG Oral Tablet from November 10, 1958, at 13:57:11 UTC until November 16, 1959, at 13:57:11 UTC. This is represented by an edge labeled TAKES_MEDICATION with a key '5:e00e4730-b338-4d2b-b715-75b0e15ece93:455', `tau_o` of 0, and no error indicated (`is_error` set to '0').
+---
+
+OUTPUT FORMAT:
+
+Provide suggested repairs in the following structured format:
+
+<repairs> {op_code} | {target} | {details} </repairs>
+
+where:
+- {op_code} is one of (`ADD_NODE`, `ADD_EDGE`, `DEL_EDGE`, `UPD_NODE`, `UPD_EDGE`)
+- {target} specifies the affected node or relationship variable
+- {details} contains relevant property changes (key-value) or `-` if none
+
+Do NOT add explanations beyond the descriptions in the output.
+
+
+EXAMPLE OUTPUT #1: (e.g., if the allergy information is incorrect)
+<repairs>
+DEL_EDGE | [rm] | -
+</repairs>
+
+EXAMPLE OUTPUT #2: (e.g., if the ingredient information is incorrect)
+<repairs>
+DEL_EDGE | [rc] | -
+</repairs>

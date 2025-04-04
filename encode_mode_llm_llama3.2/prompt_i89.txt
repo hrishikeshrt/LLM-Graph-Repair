@@ -1,0 +1,39 @@
+Based on the following description of an inconsistency
+suggest graph repairs to fix it:
+---
+
+        MATCH (p:Patient)-[rm:TAKES_MEDICATION]->(m:Medication)-[rc:HAS_INGREDIENT]->(i:Ingredient),
+            (p)-[ra:ALLERGIC_TO]->(i)
+        RETURN *
+        The graph represents a patient named Walker122 with an address at 524 Brekke Dale Suite 9. The patient was born on September 6, 1914, and died on March 19, 1977. [19d2cfb8-439b-454a-b47e-5274c219005b]. 
+
+The patient is taking the medication Epogen 4000 UNT/ML Injection, which has a code of 205923. The medication was prescribed to Walker122 on December 21, 1975. [6846]. 
+
+Walker122 is also an ingredient in the medication Epogen 4000 UNT/ML Injection. [6847].
+
+It appears that Walker122 is allergic to Epogen 4000 UNT/ML Injection, as indicated by a key of 981.
+---
+
+OUTPUT FORMAT:
+
+Provide suggested repairs in the following structured format:
+
+<repairs> {op_code} | {target} | {details} </repairs>
+
+where:
+- {op_code} is one of (`ADD_NODE`, `ADD_EDGE`, `DEL_EDGE`, `UPD_NODE`, `UPD_EDGE`)
+- {target} specifies the affected node or relationship variable
+- {details} contains relevant property changes (key-value) or `-` if none
+
+Do NOT add explanations beyond the descriptions in the output.
+
+
+EXAMPLE OUTPUT #1: (e.g., if the allergy information is incorrect)
+<repairs>
+DEL_EDGE | [rm] | -
+</repairs>
+
+EXAMPLE OUTPUT #2: (e.g., if the ingredient information is incorrect)
+<repairs>
+DEL_EDGE | [rc] | -
+</repairs>

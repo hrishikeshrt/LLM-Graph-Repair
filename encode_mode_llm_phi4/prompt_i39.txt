@@ -1,0 +1,37 @@
+Based on the following description of an inconsistency
+suggest graph repairs to fix it:
+---
+
+        MATCH (p:Patient)-[rm:TAKES_MEDICATION]->(m:Medication)-[rc:HAS_INGREDIENT]->(i:Ingredient),
+            (p)-[ra:ALLERGIC_TO]->(i)
+        RETURN *
+        The graph describes a network involving an ingredient, a medication, and a patient. The ingredient, identified as mestranol ([Node ID: 6776]), is part of the medication Humulin 70/30 Injectable Suspension ([Node ID: 6786]). This medication has a unique code '106892' and was associated with an error status.
+
+A patient named Moises22 Kerluke267 ([Node ID: 6398]) lives at 791 Keebler Village. The patient's birthdate is February 26, 1950, and they passed away on September 1, 2010. This patient has an allergy to mestranol, as indicated by the 'ALLERGIC_TO' relationship.
+
+Additionally, the patient took Humulin 70/30 Injectable Suspension from May 17, 1992, until March 14, 1993, as denoted by the 'TAKES_MEDICATION' relationship. The ingredient mestranol is confirmed to be a component of this medication through the 'HAS_INGREDIENT' relationship.
+---
+
+OUTPUT FORMAT:
+
+Provide suggested repairs in the following structured format:
+
+<repairs> {op_code} | {target} | {details} </repairs>
+
+where:
+- {op_code} is one of (`ADD_NODE`, `ADD_EDGE`, `DEL_EDGE`, `UPD_NODE`, `UPD_EDGE`)
+- {target} specifies the affected node or relationship variable
+- {details} contains relevant property changes (key-value) or `-` if none
+
+Do NOT add explanations beyond the descriptions in the output.
+
+
+EXAMPLE OUTPUT #1: (e.g., if the allergy information is incorrect)
+<repairs>
+DEL_EDGE | [rm] | -
+</repairs>
+
+EXAMPLE OUTPUT #2: (e.g., if the ingredient information is incorrect)
+<repairs>
+DEL_EDGE | [rc] | -
+</repairs>

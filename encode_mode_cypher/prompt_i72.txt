@@ -1,0 +1,33 @@
+Based on the following description of an inconsistency
+suggest graph repairs to fix it:
+---
+
+        MATCH (p:Patient)-[rm:TAKES_MEDICATION]->(m:Medication)-[rc:HAS_INGREDIENT]->(i:Ingredient),
+            (p)-[ra:ALLERGIC_TO]->(i)
+        RETURN *
+        {"i": {"tau_o": 1, "id": "epoetin alfa"}, "m": {"code": "205923", "tau_o": 1, "description": "1 ML Epogen 4000 UNT/ML Injection"}, "p": {"address": "524 Brekke Dale Suite 9", "birthdate": "1914-09-06", "tau_k": [], "last": "Kuhic920", "tau_o": 0, "deathdate": "1977-03-19", "id": "19d2cfb8-439b-454a-b47e-5274c219005b", "first": "Walker122"}, "ra": {"stop": "", "start": "", "tau_o": 0, "is_error": "1"}, "rc": {"tau_o": 1, "is_error": "0"}, "rm": {"stop": "1967-04-28T09:30:42Z", "tau_o": 0, "start": "1967-04-28T09:30:42Z"}}
+---
+
+OUTPUT FORMAT:
+
+Provide suggested repairs in the following structured format:
+
+<repairs> {op_code} | {target} | {details} </repairs>
+
+where:
+- {op_code} is one of (`ADD_NODE`, `ADD_EDGE`, `DEL_EDGE`, `UPD_NODE`, `UPD_EDGE`)
+- {target} specifies the affected node or relationship variable
+- {details} contains relevant property changes (key-value) or `-` if none
+
+Do NOT add explanations beyond the descriptions in the output.
+
+
+EXAMPLE OUTPUT #1: (e.g., if the allergy information is incorrect)
+<repairs>
+DEL_EDGE | [rm] | -
+</repairs>
+
+EXAMPLE OUTPUT #2: (e.g., if the ingredient information is incorrect)
+<repairs>
+DEL_EDGE | [rc] | -
+</repairs>

@@ -1,0 +1,45 @@
+Based on the following description of an inconsistency
+suggest graph repairs to fix it:
+---
+
+        MATCH (p:Patient)-[rm:TAKES_MEDICATION]->(m:Medication)-[rc:HAS_INGREDIENT]->(i:Ingredient),
+            (p)-[ra:ALLERGIC_TO]->(i)
+        RETURN *
+        The graph contains three nodes and three edges. 
+
+Node [4:e00e4730-b338-4d2b-b715-75b0e15ece93:6847] is labeled as an "Ingredient" with properties indicating its identifier (id) as 'epoetin alfa' and a value of 1 for 'tau_o'. 
+
+Node [4:e00e4730-b338-4d2b-b715-75b0e15ece93:6846] is labeled as a "Medication" with properties including a code '205923', a description '1 ML Epogen 4000 UNT/ML Injection', and a value of 1 for 'tau_o'.
+
+Node [4:e00e4730-b338-4d2b-b715-75b0e15ece93:6465] is labeled as a "Patient" with properties such as an address '524 Brekke Dale Suite 9', birthdate '1914-09-06', last name 'Kuhic920', first name 'Walker122', death date '1977-03-19', identifier (id) '19d2cfb8-439b-454a-b47e-5274c219005b', and a value of 0 for 'tau_o'.
+
+There is an edge from node [4:e00e4730-b338-4d2b-b715-75b0e15ece93:6846] to node [4:e00e4730-b338-4d2b-b715-75b0e15ece93:6847], labeled as "HAS_INGREDIENT" with properties indicating a value of 1 for 'tau_o' and 'is_error' set to '0'.
+
+There is an edge from node [4:e00e4730-b338-4d2b-b715-75b0e15ece93:6465] to node [4:e00e4730-b338-4d2b-b715-75b0e15ece93:6847], labeled as "ALLERGIC_TO" with properties indicating a value of 0 for 'tau_o', and 'is_error' set to '1'.
+
+There is an edge from node [4:e00e4730-b338-4d2b-b715-75b0e15ece93:6465] to node [4:e00e4730-b338-4d2b-b715-75b0e15ece93:6846], labeled as "TAKES_MEDICATION" with properties indicating a start and stop date of '1972-03-05T09:30:42Z' for the medication, and a value of 0 for 'tau_o'.
+---
+
+OUTPUT FORMAT:
+
+Provide suggested repairs in the following structured format:
+
+<repairs> {op_code} | {target} | {details} </repairs>
+
+where:
+- {op_code} is one of (`ADD_NODE`, `ADD_EDGE`, `DEL_EDGE`, `UPD_NODE`, `UPD_EDGE`)
+- {target} specifies the affected node or relationship variable
+- {details} contains relevant property changes (key-value) or `-` if none
+
+Do NOT add explanations beyond the descriptions in the output.
+
+
+EXAMPLE OUTPUT #1: (e.g., if the allergy information is incorrect)
+<repairs>
+DEL_EDGE | [rm] | -
+</repairs>
+
+EXAMPLE OUTPUT #2: (e.g., if the ingredient information is incorrect)
+<repairs>
+DEL_EDGE | [rc] | -
+</repairs>

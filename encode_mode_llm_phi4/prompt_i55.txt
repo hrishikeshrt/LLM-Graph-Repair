@@ -1,0 +1,41 @@
+Based on the following description of an inconsistency
+suggest graph repairs to fix it:
+---
+
+        MATCH (p:Patient)-[rm:TAKES_MEDICATION]->(m:Medication)-[rc:HAS_INGREDIENT]->(i:Ingredient),
+            (p)-[ra:ALLERGIC_TO]->(i)
+        RETURN *
+        In the graph, there is a node labeled "Ingredient" with an ID of `4:e00e4730-b338-4d2b-b715-75b0e15ece93:6698` and properties indicating it represents warfarin. Another node labeled "Medication" has an ID of `4:e00e4730-b338-4d2b-b715-75b0e15ece93:6697`, representing the medication Coumadin 5 MG Oral Tablet, with a code '855332' and a description as specified.
+
+A third node labeled "Patient" is identified by ID `4:e00e4730-b338-4d2b-b715-75b0e15ece93:6400`. This patient's name is Samantha Mueller, born on February 14, 1941, residing at 531 Collier Wynd. There are no recorded death dates or additional notes in the tau_k property.
+
+The graph includes an edge of type "HAS_INGREDIENT" connecting the medication node `4:e00e4730-b338-4d2b-b715-75b0e15ece93:6697` to the ingredient node `4:e00e4730-b338-4d2b-b715-75b0e15ece93:6698`, indicating that warfarin is an ingredient in Coumadin 5 MG Oral Tablet.
+
+There is also an edge of type "ALLERGIC_TO" from the patient node `4:e00e4730-b338-4d2b-b715-75b0e15ece93:6400` to the ingredient node `4:e00e4730-b338-4d2b-b715-75b0e15ece93:6698`, suggesting that Samantha Mueller is allergic to warfarin, although this connection is marked as an error.
+
+Finally, there is a "TAKES_MEDICATION" edge from the patient node `4:e00e4730-b338-4d2b-b715-75b0e15ece93:6400` to the medication node `4:e00e4730-b338-4d2b-b715-75b0e15ece93:6697`, indicating that Samantha Mueller took Coumadin 5 MG Oral Tablet from July 3, 1998, to July 31, 1998.
+---
+
+OUTPUT FORMAT:
+
+Provide suggested repairs in the following structured format:
+
+<repairs> {op_code} | {target} | {details} </repairs>
+
+where:
+- {op_code} is one of (`ADD_NODE`, `ADD_EDGE`, `DEL_EDGE`, `UPD_NODE`, `UPD_EDGE`)
+- {target} specifies the affected node or relationship variable
+- {details} contains relevant property changes (key-value) or `-` if none
+
+Do NOT add explanations beyond the descriptions in the output.
+
+
+EXAMPLE OUTPUT #1: (e.g., if the allergy information is incorrect)
+<repairs>
+DEL_EDGE | [rm] | -
+</repairs>
+
+EXAMPLE OUTPUT #2: (e.g., if the ingredient information is incorrect)
+<repairs>
+DEL_EDGE | [rc] | -
+</repairs>

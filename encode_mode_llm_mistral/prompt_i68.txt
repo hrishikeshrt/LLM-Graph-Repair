@@ -1,0 +1,41 @@
+Based on the following description of an inconsistency
+suggest graph repairs to fix it:
+---
+
+        MATCH (p:Patient)-[rm:TAKES_MEDICATION]->(m:Medication)-[rc:HAS_INGREDIENT]->(i:Ingredient),
+            (p)-[ra:ALLERGIC_TO]->(i)
+        RETURN *
+         There is a node with the ID '19d2cfb8-439b-454a-b47e-5274c219005b' that represents a patient named Walker122, born on 1914-09-06 and died on 1977-03-19. This node has the address '524 Brekke Dale Suite 9'.
+
+   Another node with the ID 'e00e4730-b338-4d2b-b715-75b0e15ece93' is associated with two different labels: 'Medication' and 'Ingredient'. The former has the description "1 ML Epogen 4000 UNT/ML Injection" and code '205923', while the latter is labeled as 'epoetin alfa'. Both have a property 'tau_o' with value 1.
+
+   There is an edge connecting the patient node to the medication node, indicating that the patient takes the medication (key: 5:e00e4730-b338-4d2b-b715-75b0e15ece93:778). The start date is specified as '1972-10-04T09:30:42Z' and there is no stop date given, meaning the medication was continuously taken after this date.
+
+   There is another edge connecting the patient node to the ingredient node (key: 5:e00e4730-b338-4d2b-b715-75b0e15ece93:52035). This edge has a type 'HAS_INGREDIENT', indicating that the medication contains the ingredient.
+
+   Lastly, there is an edge connecting the patient node to the medication node with a type 'ALLERGIC_TO' (key: 5:e00e4730-b338-4d2b-b715-75b0e15ece93:981). This edge has an 'is_error' property set to '1', suggesting that there might be an error in the data. No start or stop dates are provided for this allergy.
+---
+
+OUTPUT FORMAT:
+
+Provide suggested repairs in the following structured format:
+
+<repairs> {op_code} | {target} | {details} </repairs>
+
+where:
+- {op_code} is one of (`ADD_NODE`, `ADD_EDGE`, `DEL_EDGE`, `UPD_NODE`, `UPD_EDGE`)
+- {target} specifies the affected node or relationship variable
+- {details} contains relevant property changes (key-value) or `-` if none
+
+Do NOT add explanations beyond the descriptions in the output.
+
+
+EXAMPLE OUTPUT #1: (e.g., if the allergy information is incorrect)
+<repairs>
+DEL_EDGE | [rm] | -
+</repairs>
+
+EXAMPLE OUTPUT #2: (e.g., if the ingredient information is incorrect)
+<repairs>
+DEL_EDGE | [rc] | -
+</repairs>

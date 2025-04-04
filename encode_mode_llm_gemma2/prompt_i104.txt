@@ -1,0 +1,36 @@
+Based on the following description of an inconsistency
+suggest graph repairs to fix it:
+---
+
+        MATCH (p:Patient)-[rm:TAKES_MEDICATION]->(m:Medication)-[rc:HAS_INGREDIENT]->(i:Ingredient),
+            (p)-[ra:ALLERGIC_TO]->(i)
+        RETURN *
+        [Node 4:e00e4730-b338-4d2b-b715-75b0e15ece93:6695] is a frozenset of {'Ingredient'} and has the properties {'tau_o': 1, 'id': 'hydrochlorothiazide'}. [Node 4:e00e4730-b338-4d2b-b715-75b0e15ece93:6694] is a frozenset of {'Medication'} and has the properties {'code': '310798', 'tau_o': 1, 'description': 'HCTZ 25 MG Oral Tablet'}. [Node 4:e00e4730-b338-4d2b-b715-75b0e15ece93:5641] is a frozenset of {'Patient'} and has the properties {'address': '124 Fadel Dam Apt 81', 'birthdate': '1953-08-03', 'tau_k': [], 'last': 'Lang846', 'tau_o': 0, 'deathdate': '', 'id': '09616ead-22c8-4210-8cb9-2fdc28e043ca', 'first': 'Christena299'}. There is an edge between [Node 4:e00e4730-b338-4d2b-b715-75b0e15ece93:6694] and [Node 4:e00e4730-b338-4d2b-b715-75b0e15ece93:6695] with key 5:e00e4730-b338-4d2b-b715-75b0e15ece93:51916 and type_ HAS_INGREDIENT. There is an edge between [Node 4:e00e4730-b338-4d2b-b715-75b0e15ece93:5641] and [Node 4:e00e4730-b338-4d2b-b715-75b0e15ece93:6695] with key 5:e00e4730-b338-4d2b-b715-75b0e15ece93:984 and type_ ALLERGIC_TO. There is an edge between [Node 4:e00e4730-b338-4d2b-b715-75b0e15ece93:5641] and [Node 4:e00e4730-b338-4d2b-b715-75b0e15ece93:6694] with key 5:e00e4730-b338-4d2b-b715-75b0e15ece93:12 and type_ TAKES_MEDICATION.  
+
+
+
+---
+
+OUTPUT FORMAT:
+
+Provide suggested repairs in the following structured format:
+
+<repairs> {op_code} | {target} | {details} </repairs>
+
+where:
+- {op_code} is one of (`ADD_NODE`, `ADD_EDGE`, `DEL_EDGE`, `UPD_NODE`, `UPD_EDGE`)
+- {target} specifies the affected node or relationship variable
+- {details} contains relevant property changes (key-value) or `-` if none
+
+Do NOT add explanations beyond the descriptions in the output.
+
+
+EXAMPLE OUTPUT #1: (e.g., if the allergy information is incorrect)
+<repairs>
+DEL_EDGE | [ra] | -
+</repairs>
+
+EXAMPLE OUTPUT #2: (e.g., if the ingredient information is incorrect)
+<repairs>
+DEL_EDGE | [rc] | -
+</repairs>

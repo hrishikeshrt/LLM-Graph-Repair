@@ -1,0 +1,35 @@
+Based on the following description of an inconsistency
+suggest graph repairs to fix it:
+---
+
+        MATCH (p:Patient)-[rm:TAKES_MEDICATION]->(m:Medication)-[rc:HAS_INGREDIENT]->(i:Ingredient),
+            (p)-[ra:ALLERGIC_TO]->(i)
+        RETURN *
+        The graph describes a network involving an ingredient, a medication, and a patient. The ingredient is identified as "chlorthalidone" with an ID of 'e00e4730-b338-4d2b-b715-75b0e15ece93:6681'. It is associated with the medication "Tenoretic 50 Oral Tablet," which has a code '746030' and an ID of 'e00e4730-b338-4d2b-b715-75b0e15ece93:6678'. This medication contains chlorthalidone as an ingredient.
+
+The patient, Cassandra224 O'Reilly797, with the ID 'e00e4730-b338-4d2b-b715-75b0e15ece93:5650', lives at "1028 O'Hara Corner Unit 84" and was born on August 25, 1935. The patient has an allergy to chlorthalidone, although this is marked as an error in the data. Additionally, Cassandra224 took the medication Tenoretic from March 29, 1982, until April 4, 1983.
+---
+
+OUTPUT FORMAT:
+
+Provide suggested repairs in the following structured format:
+
+<repairs> {op_code} | {target} | {details} </repairs>
+
+where:
+- {op_code} is one of (`ADD_NODE`, `ADD_EDGE`, `DEL_EDGE`, `UPD_NODE`, `UPD_EDGE`)
+- {target} specifies the affected node or relationship variable
+- {details} contains relevant property changes (key-value) or `-` if none
+
+Do NOT add explanations beyond the descriptions in the output.
+
+
+EXAMPLE OUTPUT #1: (e.g., if the allergy information is incorrect)
+<repairs>
+DEL_EDGE | [rm] | -
+</repairs>
+
+EXAMPLE OUTPUT #2: (e.g., if the ingredient information is incorrect)
+<repairs>
+DEL_EDGE | [rc] | -
+</repairs>

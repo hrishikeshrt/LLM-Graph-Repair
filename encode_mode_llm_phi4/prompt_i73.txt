@@ -1,0 +1,39 @@
+Based on the following description of an inconsistency
+suggest graph repairs to fix it:
+---
+
+        MATCH (p:Patient)-[rm:TAKES_MEDICATION]->(m:Medication)-[rc:HAS_INGREDIENT]->(i:Ingredient),
+            (p)-[ra:ALLERGIC_TO]->(i)
+        RETURN *
+        The graph represents a network of nodes and edges involving an ingredient, medication, and a patient. 
+
+Node 6847 is labeled as "Ingredient" with the property id 'epoetin alfa'. Node 6846 is labeled as "Medication," identified by code '205923', described as '1 ML Epogen 4000 UNT/ML Injection.' Node 6465 represents a "Patient" named Walker122 Kuhic920, residing at 524 Brekke Dale Suite 9. The patient was born on September 6, 1914, and passed away on March 19, 1977.
+
+There is an edge from the Medication node (6846) to the Ingredient node (6847), indicating that 'epoetin alfa' is an ingredient of the medication with no errors reported. Another edge connects the Patient node (6465) to the Ingredient node (6847), suggesting the patient was allergic to 'epoetin alfa', although this relationship has been marked as erroneous.
+
+Additionally, there is an edge from the Patient node (6465) to the Medication node (6846), indicating that Walker122 Kuhic920 took the medication '1 ML Epogen 4000 UNT/ML Injection' starting and stopping on May 3, 1970, at 09:30:42 UTC.
+---
+
+OUTPUT FORMAT:
+
+Provide suggested repairs in the following structured format:
+
+<repairs> {op_code} | {target} | {details} </repairs>
+
+where:
+- {op_code} is one of (`ADD_NODE`, `ADD_EDGE`, `DEL_EDGE`, `UPD_NODE`, `UPD_EDGE`)
+- {target} specifies the affected node or relationship variable
+- {details} contains relevant property changes (key-value) or `-` if none
+
+Do NOT add explanations beyond the descriptions in the output.
+
+
+EXAMPLE OUTPUT #1: (e.g., if the allergy information is incorrect)
+<repairs>
+DEL_EDGE | [rm] | -
+</repairs>
+
+EXAMPLE OUTPUT #2: (e.g., if the ingredient information is incorrect)
+<repairs>
+DEL_EDGE | [rc] | -
+</repairs>
